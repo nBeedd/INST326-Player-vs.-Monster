@@ -126,3 +126,56 @@ def levels(level):
     # This will ensure the player's health doesn't go below 0 nor above 100. 
     print(f"Current health: {health}")
     return health
+
+
+def combat_sys(player_stamina, weapon_choice, attack_choice):
+    
+    """
+    Used to make a turn based combat system
+
+    Args:
+        player_stamina (float): The current stamina of the player.
+        weapon_choice (str): The weapon chosen by the player
+        attack_choice (str): The type of attack chosen by the player 
+    
+    returns:
+        float: The players stamina at the end of the turn
+
+    """
+    weapons = {
+        'Sword': {'damage_modify': 1.7, 'stamina_modify': 1.7},
+        'Hammer': {'damage_modify': 2.5, 'stamina_modify': 2.5},
+        'Dagger': {'damage_modify': 0.7, 'stamina_modify': 0.7},
+        'Spear': {'damage_modify': 1.0, 'stamina_modify': 1.0}
+    }
+    
+    if weapon_choice in weapons:
+        weapon_modifier = weapons[weapon_choice]['damage_modify']
+        stamina_modifier = weapons[weapon_choice]['stamina_modify']
+        print(f"You chose the {weapon_choice} with a damage modifier of {weapon_modifier}.")
+        
+        if attack_choice == "A":
+            base_damage = 30
+            base_stamina = 30
+        elif attack_choice == "B":
+            base_damage = 20
+            base_stamina = 20
+        elif attack_choice == "C":
+            base_damage = 10
+            base_stamina = 10
+        else:
+            print("Invalid attack")
+            return player_stamina
+
+        if player_stamina >= base_stamina * stamina_modifier:
+            player_stamina -= base_stamina * stamina_modifier
+            damage_monster = base_damage * weapon_modifier
+            print(f"Damage dealt to monster: {damage_monster}")
+            print(f"Remaining stamina: {player_stamina}")
+        else:
+            print("Not enough stamina for this attack.")
+    else:
+        print("Chosen weapon is not an option.")
+    
+    return player_stamina
+
