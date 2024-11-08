@@ -77,7 +77,7 @@ def levels(level):
         }
     }
     
-    actions = []
+
     if level <= 3:
         if level == 3:
             rooms = [key for key in map]
