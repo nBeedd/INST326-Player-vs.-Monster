@@ -1,4 +1,5 @@
 # This is where we are putting our functions for the project check in
+
 import random
 
 def create_monster(level):
@@ -45,9 +46,8 @@ def playerhealth(monster_attack = False, health = 100, health_jar = False):
         health += boost_health
         print(f"Player found a health jar! Gained {boost_health} health.")
 
-
     health = min(max(health, 0), 100)
-    # This will ensure the player's health doesn't go below 0 nor above 100. 
+    # This will keep the player's health from going below 0 and above 100.
     print(f"Current health: {health}")
     return health
 
@@ -106,6 +106,8 @@ def combat_sys(player_stamina, weapon_choice, attack_choice):
 turns = 0
 monsterdead = False
 mondone = False
+
+
 def levels(level):
     """
     Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
