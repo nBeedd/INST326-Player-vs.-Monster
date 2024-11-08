@@ -44,6 +44,83 @@ def playerhealth(monster_attack = False, health = 100, health_jar = False):
     # If the player finds the health jar, it will increase his health.
         health += boost_health
         print(f"Player found a health jar! Gained {boost_health} health.")
+monsterhp = 10
+resilience = 0
+power = 2
+turns = 0
+monsterdead = False
+mondone = False
+def levels(level):
+    """
+    Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
+    Args:
+        level (int): An integer used to set the level
+    """
+    map = {
+        "Kitchen": {
+            "Floor": 1,
+            "Placement": ["Left of Dining Room", "Stairs to Bedroom"]
+            
+        },
+        "Dining Room":{
+            "Floor": 1,
+            "Placement": "Right of the Kitchen"
+        },
+        "Bedroom": {
+            "Floor": 2,
+            "Placement": "Right of Bathroom"
+        
+        },
+        "Bathroom": {
+            "Floor": 2,
+            "Placement": "Left of Bedroom"
+        }
+    }
+    
+    actions = []
+    if level <= 3:
+        if level == 3:
+            rooms = [key for key in map]
+            turns = 2
+            while monsterdead == False:
+                if playercounter >= 1:
+                    
+                    if playerchoice == key:
+                            monsterchoice = random.choice(playerchoice, "")
+                    elif map[playerchoice]["Floor"] == map[monsterchoice]["Floor"]:
+                            monsterchoices = [room for room in rooms if map[room]["Floor"] == map[playerchoice]["Floor"]]
+                            monsterchoice = random.choice(monsterchoices)
+                            turns -= 1
+                            if "Left" in map[playerchoice]["Placement"]:
+                                 monsterchoices = [room for room in rooms if "Right" in map[playerchoice]]
+                                 monsterchoice = random.choice(monsterchoice)
+                                 turns -= 1  
+        
+                            elif "Right" in map[playerchoice]["Placement"]:
+                                 monsterchoices = [room for room in rooms if "Left" in map[playerchoice]]
+                                 monsterchoice = random.choice(monsterchoice)
+                                 turns -= 1
+                    
+                    if playerchoice in rooms:
+                         monsterchoice = random.choice(rooms)
+                    if turns == 0:
+                            mondone = True
+                    
+    if level == 2:
+        if map[playerchoice]["Floor"] == map[monsterchoice]["Floor"]:
+            
+                            monsterchoices = [room for room in rooms if map[room]["Floor"] == map[playerchoice]["Floor"]]
+                            monsterchoice = random.choice(monsterchoices, "", "")
+                            turns -= 1
+        if turns == 0:
+                            mondone = True
+         
+    if level == 1:
+         turns = 1
+         if playerchoice in rooms:
+              monsterchoice = random.choice(rooms)
+         if turns == 0:
+                mondone = True
 
     health = min(max(health, 0), 100)
     # This will ensure the player's health doesn't go below 0 nor above 100. 
