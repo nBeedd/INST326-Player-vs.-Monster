@@ -16,7 +16,7 @@ class Player:
     def equip_weapon(self, weapon):
          self.weapon = weapon 
         
-    def playerhealth(monster_attack = False, health = 100, health_jar = False):
+    def playerhealth(self, monster_attack = False, health_jar = False):
 
     """ Manages the player's health based on monster attacks and found health jar.
 
