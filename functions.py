@@ -1,6 +1,25 @@
-# This is where we are putting our functions for the project check in
+# This is where we are putting our functions for the project check-in
 
 import random
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = 100
+        self.weapon = None
+
+    def take_damage(self, damage):
+         self.health -= damage
+         if self.health <= 0:
+              print(f"{self.name} is dead!") 
+
+    def equip_weapon(self, weapon):
+         self.weapon = weapon 
+
+
+    def __add__(self):
+        #when the player picks up the health bar
+        pass
 
 def create_monster(level):
     """
