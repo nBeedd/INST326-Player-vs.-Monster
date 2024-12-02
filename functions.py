@@ -4,12 +4,18 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.health = 100
+        self.stamina = 100
         self.weapon = None
 
     def take_damage(self, damage):
          self.health -= damage
          if self.health <= 0:
               print(f"{self.name} is dead!") 
+
+    def use_stamina(self, stamina):
+        self.stamina -= stamina
+        if self.stamina < 0:
+            self.stamina = 0
 
     def equip_weapon(self, weapon):
          self.weapon = weapon 
