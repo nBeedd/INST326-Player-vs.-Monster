@@ -1,5 +1,3 @@
-# This is where we are putting our functions for the project check-in
-
 import random
 
 class Player:
@@ -17,8 +15,8 @@ class Player:
          self.weapon = weapon 
         
     def playerhealth(self, monster_attack = False, health_jar = False):
-
-    """ Manages the player's health based on monster attacks and found health jar.
+        
+        """ Manages the player's health based on monster attacks and found health jar.
 
     Arguments:
             monster_attack (bool): If true, reduces player's health by 10.
@@ -27,26 +25,19 @@ class Player:
     
     Returns:
             int: The player's updated health bar.
-
-    """
-    health_loss = 10
-    # The amount of health player lose if he gets attack by the monster.
-    boost_health = random.choice([5,10,15,20]) if health_jar else 0
-    #If the player finds the boost, it will increase his health.
-
-    if monster_attack:
-    # If the monster attacks the player, he will lose his health by 10.
-        self.health -= health_loss
-        print("Monster attacked! {self.name}. Player health decreased by 10.")
-    elif health_jar:
-    # If the player finds the health jar, it will increase his health.
-        self.health += boost_health
-        print(f"{self.name} found a health jar! Gained {boost_health} health. Current health: {self.health}")
-
-    self.health = min(max(health, 0), 100)
-    # This will keep the player's health from going below 0 and above 100.
-    print(f"Current health: {self.health}")
-    return self.health
+        """
+        
+        health_loss = 10
+        boost_health = random.choice([5,10,15,20]) if health_jar else 0
+        if monster_attack:
+            self.health -= health_loss
+            print("Monster attacked! {self.name}. Player health decreased by 10.")
+        elif health_jar:
+            self.health += boost_health
+            print(f"{self.name} found a health jar! Gained {boost_health} health. Current health: {self.health}")
+            self.health = min(max(health, 0), 100)
+            print(f"Current health: {self.health}")
+            return self.health
 
 
 
