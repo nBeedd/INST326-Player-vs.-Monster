@@ -114,22 +114,34 @@ monsterdead = False
 mondone = False
 
 
+playerturn = False
+monsterturn = False
+monsterdead = False
+monsterattack = False
 def levels(level):
+    
     """
     Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
     Args:
         level (int): An integer used to set the level
+    Returns:
+        finalchoice (str): Represents the monsters choice
     """
     map = {
         "Kitchen": {
             "Floor": 1,
-            "Placement": ["Left of Dining Room", "Stairs to Bedroom"]
+            "Placement": "Left of Dining Room"
             
         },
         "Dining Room":{
             "Floor": 1,
             "Placement": "Right of the Kitchen"
         },
+        "Living Room":{
+            "Floor": 1,
+            "Placement": "Left of Kitchen"
+        },
+
         "Bedroom": {
             "Floor": 2,
             "Placement": "Right of Bathroom"
@@ -138,50 +150,118 @@ def levels(level):
         "Bathroom": {
             "Floor": 2,
             "Placement": "Left of Bedroom"
+        },
+        "Guest Room": {
+            "Floor": 2,
+            "Placement": "Left of Bathroom"
         }
     }
     
-
+    limit = 6
+    
+    weapons = ["Sword", "Hammer", "Dagger", "Spear"]
     if level <= 3:
+        
         if level == 3:
+            #Determines whether the player will get a weapon or not
+            weaponchance = ["yes","no","no","no"]
+            monster = create_monster(3)
             rooms = [key for key in map]
-            turns = 2
-            while monsterdead == False:
-                if playercounter >= 1:
+            playerturn = True
+            for room in rooms:
+                   print(room)
+            if playerturn == True:
+            
+                playerchoice = input("Select a room and type the room exactly as it is shown: ")
+                weapon = random.choice(weaponchance)
+                if weapon == "yes":
+                       pass
+                       #use the weapon function
+                else:
+                        print(f"You selected {playerchoice}" if playerchoice in rooms else "not in the rooms")
+                        
+                       
+
+            playerturn = False
+            monsterturn = True
+            while monsterturn == True:  
                     
-                    if playerchoice == key:
-                            monsterchoice = random.choice(playerchoice, "")
-                    elif map[playerchoice]["Floor"] == map[monsterchoice]["Floor"]:
-                            monsterchoices = [room for room in rooms if map[room]["Floor"] == map[playerchoice]["Floor"]]
-                            monsterchoice = random.choice(monsterchoices)
-                            turns -= 1
+                    if map[playerchoice]["Floor"] == map[playerchoice]["Floor"]:
+                            monsterchoices = [room for room in rooms if map[room]["Floor"] == 1]
                             if "Left" in map[playerchoice]["Placement"]:
-                                 monsterchoices = [room for room in rooms if "Right" in map[playerchoice]]
-                                 monsterchoice = random.choice(monsterchoice)
-                                 turns -= 1  
+                                 narrowchoice = [room for room in monsterchoices if "Right" in map[playerchoice]]
+                                 stuff = [narrowchoice]
+                                 for i in monsterchoices:
+                                        stuff.append(i)
+                                 finalchoice = random.choice(stuff)
+                                 return f"Monster chose {finalchoice}"
         
                             elif "Right" in map[playerchoice]["Placement"]:
-                                 monsterchoices = [room for room in rooms if "Left" in map[playerchoice]]
-                                 monsterchoice = random.choice(monsterchoice)
-                                 turns -= 1
+                                 narrowchoice = [room for room in monsterchoices if "Left" in map[playerchoice]]
+                                 stuff = [narrowchoice]
+                                 for i in monsterchoices:
+                                        stuff.append(i)
+                                
+                                 finalchoice = random.choice(stuff)
+                                 return f"Monster chose {finalchoice}"
                     
-                    if playerchoice in rooms:
-                         monsterchoice = random.choice(rooms)
-                    if turns == 0:
-                            mondone = True
+                    elif playerchoice in rooms:
+                         finalchoice = random.choice(rooms)
+                         return f"Monster chose {finalchoice}"
+                    if finalchoice == playerchoice:
+                           #monster attacks player
+                           monsterattack = True
+                           turn -= 1
+                    else:
+                           turn -= 1
+                    if turn == 0:
+                        limit -= 1
+                        playerturn = True
+                    if limit == 0:
+                            print("Game over! Your score was {score}")
+                            
+                        
+            
+                           
+                    
+            
                     
     if level == 2:
-        if map[playerchoice]["Floor"] == map[monsterchoice]["Floor"]:
+        limit = 5
+        if map[playerchoice]["Floor"] == map[monsterchoice]["Floor"] and limit > 0:
             
                             monsterchoices = [room for room in rooms if map[room]["Floor"] == map[playerchoice]["Floor"]]
-                            monsterchoice = random.choice(monsterchoices, "", "")
-                            turns -= 1
-        if turns == 0:
-                    mondone = True
+                            choices = [""]
+                            for i in monsterchoices:
+                                   choices.append(i)
+                            finalchoice = random.choice(choices)
+                            return f"Monster chose {finalchoice}"
+        if finalchoice == playerchoice:
+                           monsterattack = True
+                           turn -= 1
+        else:
+                           turn -= 1
+        if turn == 0:
+                    limit -= 1
+                    playerturn = True
+        if limit == 0:
+                    level(level + 1)
+                            
+      
          
     if level == 1:
+         limit = 3
          turns = 1
-         if playerchoice in rooms:
+         if playerchoice in rooms and  limit > 0:
               monsterchoice = random.choice(rooms)
-         if turns == 0:
-                mondone = True
+              return f"Monster chose {monsterchoice}"
+         if playerchoice == finalchoice:
+            monsterattack == True
+            turns = 0
+            playerturn = True
+              
+         turns -= 1
+         limit -= 1
+
+         if limit == 0:
+                 level(level + 1)   
