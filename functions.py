@@ -6,6 +6,7 @@ class Player:
         self.health = 100
         self.weapon = None
         self.stamina = 100
+        self.current_room = None
 
     def take_damage(self, damage):
          self.health -= damage
@@ -45,6 +46,23 @@ class Player:
             self.health = min(max(self.health, 0), 100)
             print(f"Current health: {self.health}")
             return self.health
+
+    def choose_room(self, game_map):
+        print("Available Rooms:")
+        for room in game_map:
+              print(room)
+
+        while True:
+            room_choice = input("Select a room and type the room exactly as shown: ")
+            if room_choice in game_map:
+                self.current_room = room_choice
+                print(f"{self.name} moved to {self.current_room}.")
+                break
+            else:
+                print("Invalid room choice. Please select a valid room.")
+
+    def __str__(self):
+          return f"Player {self.name}: Health={self.health}, Stamina={self.stamina}, Current Room={self.current_room}"
 
 
 class Monster:
