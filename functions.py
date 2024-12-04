@@ -4,19 +4,19 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.health = 100
-        self.stamina = 100
         self.weapon = None
+        self.stamina = 100
 
     def take_damage(self, damage):
          self.health -= damage
          if self.health <= 0:
               print(f"{self.name} is dead!") 
-
+    
     def use_stamina(self, stamina):
         self.stamina -= stamina
-        if self.stamina < 0:
-            self.stamina = 0
-
+        if self.stamina <= 0:
+            print(f"{self.name} is out of stamina, needs to recharge!")
+            
     def equip_weapon(self, weapon):
          self.weapon = weapon 
         
@@ -32,19 +32,19 @@ class Player:
     Returns:
             int: The player's updated health bar.
         """
-        
         health_loss = 10
         boost_health = random.choice([5,10,15,20]) if health_jar else 0
+
         if monster_attack:
             self.health -= health_loss
             print("Monster attacked! {self.name}. Player health decreased by 10.")
+
         elif health_jar:
             self.health += boost_health
             print(f"{self.name} found a health jar! Gained {boost_health} health. Current health: {self.health}")
-            self.health = min(max(health, 0), 100)
+            self.health = min(max(self.health, 0), 100)
             print(f"Current health: {self.health}")
             return self.health
-
 
 
 class Monster:
@@ -133,12 +133,12 @@ def combat_sys(player_stamina, weapon_choice, attack_choice):
 turns = 0
 monsterdead = False
 mondone = False
-
-
 playerturn = False
 monsterturn = False
 monsterdead = False
 monsterattack = False
+
+
 def levels(level):
     
     """
@@ -201,8 +201,6 @@ def levels(level):
                 else:
                         print(f"You selected {playerchoice}" if playerchoice in rooms else "not in the rooms")
                         
-                       
-
             playerturn = False
             monsterturn = True
             while monsterturn == True:  
@@ -240,13 +238,7 @@ def levels(level):
                         playerturn = True
                     if limit == 0:
                             print("Game over! Your score was {score}")
-                            
-                        
-            
-                           
-                    
-            
-                    
+                                               
     if level == 2:
         limit = 5
         if map[playerchoice]["Floor"] == map[monsterchoice]["Floor"] and limit > 0:
@@ -267,8 +259,6 @@ def levels(level):
                     playerturn = True
         if limit == 0:
                     level(level + 1)
-                            
-      
          
     if level == 1:
          limit = 3
