@@ -47,22 +47,37 @@ class Player:
 
 
 
+class Monster:
+    def __init__(self, level, health=100, attack=10, defense=5):
+        self.level = level
+        self.health = health
+        self.attack = attack
+        self.defense = defense
+    
+    def take_damage(self, damage):
+        # Reduces the monster's health based on incoming damage.
+        damage_after_defense = max(0, damage - self.defense)
+        self.health = max(0, self.health - damage_after_defense)
+    
+    def level_up(self):
+        # Levels up the monster 1 level and strengthens the monster.
+        self.level += 1
+        self.attack += random.randint(2, 10)
+        self.defense += random.randint(1,5)
+        self.health += random.randint(10,30)
+        print(f"Monster has leveled up to {self.level}")
+    
+    def is_monster_alive(self):
+        # Checks to see if monster is stil alive
+        return self.health > 0
+    def __str__(self):
+        # returns a string representation of the monster
+        return (f"Monster\n"
+                 f"Health: {self.health}\n"
+                 f"Attack: {self.attack}\n"
+                 f"Defense: {self.defense}")
 
-def create_monster(level):
-    """
-    Creates a monster with attributes that power scales based on the given level.
-    
-    Parameters:
-    level (int): The level of the monster, which affects its health, attack, and defense power.
-    
-    Returns:
-    dict: A dictionary with the monster's attributes.
-    """
-    monster = {"Health": random.randint(75,100) + (level * 5), 
-              "Attack": random.randint(10,15) + (level * 2),
-              "Defense Power": (5 + level * 2),
-              "Name": "Monster Level " + str(level)}
-    return monster
+
 
 def combat_sys(player_stamina, weapon_choice, attack_choice):
     
