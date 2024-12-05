@@ -139,29 +139,24 @@ def combat_sys(player, monster, weapon, attack):
     monster.take_damage(total_damage)
 
     
-turns = 0
-monsterdead = False
-mondone = False
 playerturn = False
 monsterturn = False
 monsterdead = False
 monsterattack = False
+hasweapon = False
+playerchoice = str()
+player = Player("Bob")
+foundroom = str()
+weapon_storage = [Weapon("Sword", 1.7, 1.7),
+                  Weapon("Hammer", 2.5, 2.5),
+                  Weapon("Dagger", 0.7, 0.7),
+                  Weapon("Spear", 1.0, 1.0)]
 
-
-def levels(level):
-    
-    """
-    Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
-    Args:
-        level (int): An integer used to set the level
-    Returns:
-        finalchoice (str): Represents the monsters choice
-    """
-    map = {
+map = {
         "Kitchen": {
             "Floor": 1,
             "Placement": "Left of Dining Room"
-            
+
         },
         "Dining Room":{
             "Floor": 1,
@@ -175,7 +170,7 @@ def levels(level):
         "Bedroom": {
             "Floor": 2,
             "Placement": "Right of Bathroom"
-        
+
         },
         "Bathroom": {
             "Floor": 2,
@@ -186,102 +181,254 @@ def levels(level):
             "Placement": "Left of Bathroom"
         }
     }
-    
+rooms = [key for key in map]
+
+def levels(level):
+
+    """
+    Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
+    Args:
+        level (int): An integer used to set the level
+    """
+
+
     limit = 6
-    
-    weapons = ["Sword", "Hammer", "Dagger", "Spear"]
+
     if level <= 3:
-        
+
         if level == 3:
-            #Determines whether the player will get a weapon or not
+
+            monster = Monster(3,100,50,30)
             weaponchance = ["yes","no","no","no"]
-            monster = create_monster(3)
-            rooms = [key for key in map]
             playerturn = True
-            for room in rooms:
-                   print(room)
-            if playerturn == True:
-            
-                playerchoice = input("Select a room and type the room exactly as it is shown: ")
+
+            while playerturn:
+
+                playerchoice = player.choose_room(map)
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
-                       pass
-                       #use the weapon function
+                       yourweapon = random.choice(weapon_storage)
+                       hasweapon = True
+                elif hasweapon:
+                       print(f"{player.name} already has a weapon")
+                       print(f"{player.name} selected {playerchoice}")
                 else:
-                        print(f"You selected {playerchoice}" if playerchoice in rooms else "not in the rooms")
-                        
+
+                        print(f"{player.name} selected {playerchoice}")
+
+
+
             playerturn = False
             monsterturn = True
-            while monsterturn == True:  
-                    
-                    if map[playerchoice]["Floor"] == map[playerchoice]["Floor"]:
-                            monsterchoices = [room for room in rooms if map[room]["Floor"] == 1]
-                            if "Left" in map[playerchoice]["Placement"]:
-                                 narrowchoice = [room for room in monsterchoices if "Right" in map[playerchoice]]
-                                 stuff = [narrowchoice]
-                                 for i in monsterchoices:
-                                        stuff.append(i)
-                                 finalchoice = random.choice(stuff)
-                                 return f"Monster chose {finalchoice}"
-        
-                            elif "Right" in map[playerchoice]["Placement"]:
-                                 narrowchoice = [room for room in monsterchoices if "Left" in map[playerchoice]]
-                                 stuff = [narrowchoice]
-                                 for i in monsterchoices:
-                                        stuff.append(i)
-                                
-                                 finalchoice = random.choice(stuff)
-                                 return f"Monster chose {finalchoice}"
-                    
-                    elif playerchoice in rooms:
-                         finalchoice = random.choice(rooms)
-                         return f"Monster chose {finalchoice}"
-                    if finalchoice == playerchoice:
-                           #monster attacks player
-                           monsterattack = True
-                           turn -= 1
-                    else:
-                           turn -= 1
-                    if turn == 0:
+            while monsterturn:
+                     if map[playerchoice]["Floor"] == 1:
+                        foundroom = room_finder(playerchoice, 1, None, level)
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Left":
+                             foundroom = room_finder(playerchoice, 1, "Left", level)
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Right":
+                             foundroom = room_finder(playerchoice, 1, "Right", level)
+                     elif map[playerchoice]["Floor"] == 2:
+                        foundroom = room_finder(playerchoice, 2, None, level)
+
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Left":
+                             foundroom = room_finder(playerchoice, 2, "Left", level)
+
+                     elif map[playerchoice]["Floor"] == 2 and map[playerchoice]["Placement"] == "Right":
+                             foundroom = room_finder(playerchoice, 2, "Right", level)
+
+
+            if playerchoice == foundroom:
+                  if hasweapon:
+                        monster.take_damage(25)
+                        player.take_damage(25)
+                        turn -= 1
+                  else:
+                        player.take_damage(50)
+                        turn -= 1
+            elif playerchoice != foundroom:
+                   turn -= 1
+            if turn == 0:
+                limit -= 1
+                playerturn == True
+            if limit == 0:
+                print(f"Level {level} is done!")
+
+
+
+
+
+    if level == 2:
+            monster = Monster(2,50,10,5)
+            weaponchance = ["yes","yes","no","no"]
+            limit = 4
+            playerturn = True
+
+            if playerturn:
+
+                playerchoice = player.choose_room(map)
+                weapon = random.choice(weaponchance)
+                if weapon == "yes":
+                       yourweapon = random.choice(weapon_storage)
+                       #use the weapon function
+                       hasweapon = True
+                elif hasweapon:
+                       print(f"{player.name} already has a weapon")
+                       print(f"{player.name} selected {playerchoice}")
+                else:
+
+                        print(f"{player.name} selected {playerchoice}")
+            playerturn = False
+            monsterturn = True
+            while monsterturn:
+                     if map[playerchoice]["Floor"] == 1:
+                        foundroom = room_finder(playerchoice, 1, None, level)
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Left":
+                             foundroom = room_finder(playerchoice, 1, "Left", level)
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Right":
+                             foundroom = room_finder(playerchoice, 1, "Right", level)
+                     elif map[playerchoice]["Floor"] == 2:
+                        foundroom = room_finder(playerchoice, 2, None, level)
+
+                     elif map[playerchoice]["Floor"] == 1 and map[playerchoice]["Placement"] == "Left":
+                             foundroom = room_finder(playerchoice, 2, "Left", level)
+
+                     elif map[playerchoice]["Floor"] == 2 and map[playerchoice]["Placement"] == "Right":
+                             foundroom = room_finder(playerchoice, 2, "Right", level)
+
+
+            if playerchoice == foundroom:
+                  if hasweapon:
+                        monster.take_damage(35)
+                        player.take_damage(15)
                         limit -= 1
                         playerturn = True
-                    if limit == 0:
-                            print("Game over! Your score was {score}")
-                                               
-    if level == 2:
-        limit = 5
-        if map[playerchoice]["Floor"] == map[monsterchoice]["Floor"] and limit > 0:
-            
-                            monsterchoices = [room for room in rooms if map[room]["Floor"] == map[playerchoice]["Floor"]]
-                            choices = [""]
-                            for i in monsterchoices:
-                                   choices.append(i)
-                            finalchoice = random.choice(choices)
-                            return f"Monster chose {finalchoice}"
-        if finalchoice == playerchoice:
-                           monsterattack = True
-                           turn -= 1
-        else:
-                           turn -= 1
-        if turn == 0:
-                    limit -= 1
-                    playerturn = True
-        if limit == 0:
-                    level(level + 1)
-         
-    if level == 1:
-         limit = 3
-         turns = 1
-         if playerchoice in rooms and  limit > 0:
-              monsterchoice = random.choice(rooms)
-              return f"Monster chose {monsterchoice}"
-         if playerchoice == finalchoice:
-            monsterattack == True
-            turns = 0
-            playerturn = True
-              
-         turns -= 1
-         limit -= 1
 
-         if limit == 0:
-                 level(level + 1)   
+                  else:
+                        player.take_damage(30)
+                        limit -= 1
+                        playerturn = True
+            elif playerchoice != foundroom:
+                   limit -= 1
+                   playerturn = True
+            if limit == 0:
+                print(f"Level {level} is done! Moving to Level {level + 1}")
+                level(level + 1)
+    if level == 1:
+          limit = 3
+          monster = Monster(1,50,5,5)
+          weaponchance = ["yes","yes","yes","no"]
+          playerturn = True
+
+          while playerturn:
+
+                playerchoice = player.choose_room(map)
+                weapon = random.choice(weaponchance)
+                if weapon == "yes":
+                       yourweapon = random.choice(weapon_storage)
+                       hasweapon = True
+                elif hasweapon:
+                       print(f"{player.name} already has a weapon")
+                       print(f"{player.name} selected {playerchoice}")
+                else:
+
+                        print(f"{player.name} selected {playerchoice}")
+                monsterturn = True
+                while monsterturn:
+                      monsterchoices = [place for place in rooms]
+                      foundroomm = random.choice(monsterchoices)
+                      limit -= 1
+                      playerturn = True
+                if playerchoice == foundroom:
+                  if hasweapon:
+                        monster.take_damage(50)
+                        player.take_damage(5)
+                        limit -= 1
+                        playerturn = True
+
+                  else:
+                        player.take_damage(5)
+                        limit -= 1
+                        playerturn = True
+                elif playerchoice != foundroom:
+                   limit -= 1
+                   playerturn = True
+
+                if limit == 0:
+                      print(f"Level {level} is done! Moving to Level {level + 1}")
+                      level(level + 1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def room_finder(room, number = 0, direction = None, level=1):
+
+    if level == 3:
+
+        if number == 1:
+
+
+                monsterchoices = [place for place in rooms if map[room]["Floor"] == 1]
+                if direction == "Left":
+                    narrowchoice = [room for room in monsterchoices if "Right" in map[room]]
+                    choices = [narrowchoice]
+                    for i in monsterchoices:
+                            choices.append(i)
+                    finalchoice = random.choice(choices)
+                    print(f"Monster chose {finalchoice}")
+                    return finalchoice
+
+                elif "Right" in map[room]["Placement"]:
+                    narrowchoice = [room for room in monsterchoices if "Left" in map[room]]
+                    choices = [narrowchoice]
+                    for i in monsterchoices:
+                            choices.append(i)
+
+                    finalchoice = random.choice(choices)
+                    print(f"Monster chose {finalchoice}")
+                    return finalchoice
+        elif number == 2:
+            monsterchoices = [place for place in rooms if map[room]["Floor"] == 2]
+            if direction == "Left":
+                narrowchoice = [room for room in monsterchoices if "Right" in map[room]]
+                choices = [narrowchoice]
+                for i in monsterchoices:
+                        choices.append(i)
+                finalchoice = random.choice(choices)
+                print(f"Monster chose {finalchoice}")
+                return finalchoice
+
+        elif "Right" in map[room]["Placement"]:
+            narrowchoice = [room for room in monsterchoices if "Left" in map[room]]
+            choices = [narrowchoice]
+            for i in monsterchoices:
+                    choices.append(i)
+
+            finalchoice = random.choice(choices)
+            print(f"Monster chose {finalchoice}")
+            return finalchoice
+
+        elif level == 2:
+                if number == 1:
+                    monsterchoices = [place for place in rooms if map[room]["Floor"] == 1]
+                    finalchoice = random.choices(monsterchoices)
+                    print(f"Monster chose {finalchoice}")
+                    return finalchoice
+                if number == 2:
+                    monsterchoices = [place for place in rooms if map[room]["Floor"] == 2]
+                    finalchoice = random.choices(monsterchoices)
+                    print(f"Monster chose {finalchoice}")
+                    return finalchoice
+        elif level == 1:
+                    monsterchoices = [place for place in rooms]
+                    finalchoice = random.choices(monsterchoices)
+                    print(f"Monster chose {finalchoice}")
+                    return finalchoice
