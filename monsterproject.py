@@ -8,6 +8,7 @@ playerchoice = str()
 turn = 0
 
 foundroom = str()
+
 class Player:
     def __init__(self, name):
         self.name = name
@@ -16,44 +17,6 @@ class Player:
         self.stamina = 100
         self.current_room = None
 
-    def take_damage(self, damage):
-         self.health -= damage
-         if self.health <= 0:
-              print(f"{self.name} is dead! Game Over!")
-
-    def use_stamina(self, stamina):
-        self.stamina -= stamina
-        if self.stamina <= 0:
-            print(f"{self.name} is out of stamina, needs to recharge!")
-
-    def equip_weapon(self, weapon):
-         self.weapon = weapon
-
-    def playerhealth(self, monster_attack = False, health_jar = False):
-
-        """ Manages the player's health based on monster attacks and found health jar.
-
-    Arguments:
-            monster_attack (bool): If true, reduces player's health by 10.
-            health         (int): Players' health bar which is 100 at the start of the game.
-            health_jar     (bool): If true, the player's health increases by random amount.
-
-    Returns:
-            int: The player's updated health bar.
-        """
-        health_loss = 10
-        boost_health = random.choice([5,10,15,20]) if health_jar else 0
-
-        if monster_attack:
-            self.health -= health_loss
-            print("Monster attacked! {self.name}. Player health decreased by 10.")
-
-        elif health_jar:
-            self.health += boost_health
-            print(f"{self.name} found a health jar! Gained {boost_health} health. Current health: {self.health}")
-            self.health = min(max(self.health, 0), 100)
-            print(f"Current health: {self.health}")
-            return self.health
 
     def choose_room(self, game_map):
         print("Available Rooms:")
@@ -73,6 +36,26 @@ class Player:
 
             else:
                 print("Invalid room choice. Please select a valid room.")
+
+    def take_damage(self, damage):
+        self.health -= damage
+        if self.health <= 0:
+            print(f"{self.name} is dead! Game Over!")
+        return self.health
+    
+    def boost_health(self):
+        boost_health = random.choice([5, 10, 15, 20])
+        self.health += boost_health
+        print(f"{self.name} found a health boost! Gained {boost_health} health.")
+        self.health = min(max(self.health, 0), 100)
+
+    def use_stamina(self, stamina):
+        self.stamina -= stamina
+        if self.stamina <= 0:
+            print(f"{self.name} is out of stamina, needs to recharge!")
+
+    def equip_weapon(self, weapon):
+         self.weapon = weapon
 
     def __str__(self):
           return f"Player {self.name}: Health={self.health}, Stamina={self.stamina}, Current Room={self.current_room}"
