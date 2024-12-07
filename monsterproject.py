@@ -49,10 +49,11 @@ class Player:
         print(f"{self.name} found a health boost! Gained {boost_health} health.")
         self.health = min(max(self.health, 0), 100)
 
-    def use_stamina(self, stamina):
-        self.stamina -= stamina
-        if self.stamina <= 0:
-            print(f"{self.name} is out of stamina, needs to recharge!")
+    def status(self):
+        if self.health > 0:
+            return "Alive"
+        else:
+            return "Dead"
 
     def equip_weapon(self, weapon):
          self.weapon = weapon
@@ -71,6 +72,7 @@ class Monster:
         # Reduces the monster's health based on incoming damage.
         damage_after_defense = max(0, damage - self.defense)
         self.health = max(0, self.health - damage_after_defense)
+        return self.health
 
     def level_up(self):
         # Levels up the monster 1 level and strengthens the monster.
@@ -83,6 +85,7 @@ class Monster:
     def is_monster_alive(self):
         # Checks to see if monster is stil alive
         return self.health > 0
+        
     def __str__(self):
         # returns a string representation of the monster
         return (f"Monster\n"
