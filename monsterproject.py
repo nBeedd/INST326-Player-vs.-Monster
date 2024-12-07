@@ -82,9 +82,11 @@ class Monster:
         self.health += random.randint(10,30)
         print(f"Monster has leveled up to {self.level}")
 
-    def is_monster_alive(self):
-        # Checks to see if monster is stil alive
-        return self.health > 0
+    def status(self):
+        if self.health > 0:
+            return "Alive"
+        else:
+            return "Dead"
         
     def __str__(self):
         # returns a string representation of the monster
