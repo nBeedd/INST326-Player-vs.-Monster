@@ -279,7 +279,7 @@ def levels(level):
                     levels(level + 1)
     if level == 1:
           prev_health = None
-          monster = Monster(1,40,5,5)
+          monster = Monster(1,40,5.5)
           weaponchance = ["yes","yes","yes","no"]
           gameplay = True
           hasweapon = False
