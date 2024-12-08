@@ -86,18 +86,17 @@ class Monster:
 player = Player("Bob")
 
 class Weapon:
-    def __init__(self, name, mod_damage, mod_stamina_cost):
+    def __init__(self, name, mod_damage):
         self.name = name
         self.mod_damage = mod_damage
-        self.mod_stamina_cost = mod_stamina_cost
 
     def __str__(self):
-        return f"{self.name} with damage modifer of {self.mod_damage} and stamina modifer of {self.mod_stamina_cost}"
+        return f"{self.name} with damage modifer of {self.mod_damage}"
 
-weapon_storage = [ Weapon("Sword", 1.7, 1.7),
-                  Weapon("Hammer", 2.5, 2.5),
-                  Weapon("Dagger", 0.7, 0.7),
-                  Weapon("Spear", 1.0, 1.0)]
+weapon_storage = [ Weapon("Sword", 1.7),
+                  Weapon("Hammer", 2.5),
+                  Weapon("Dagger", 0.7),
+                  Weapon("Spear", 1.0)]
 
 
 
