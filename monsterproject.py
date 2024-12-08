@@ -1,4 +1,5 @@
 import random
+import re
 playerturn = False
 monsterturn = False
 monsterdead = False
@@ -83,7 +84,24 @@ class Monster:
                  f"Health: {self.health}\n"
                  f"Defense: {self.defense}")
 
-player = Player("Bob")
+def validate_player_name(name):
+    """
+    """
+    if not re.match(r"^[A-Z][a-zA-Z]*$", name):
+        raise ValueError("Player name must start with a capital letter and contain only letters.")
+    return name
+
+while True:
+    try:
+        player_name  = input("Enter your player name: ")
+        validated_name = validate_player_name(player_name)
+        player = Player(validated_name)
+        print(f"Welcome, {player.name}!")
+        break
+    except ValueError as e:
+        print(e)
+        
+# player = Player("Bob")
 
 class Weapon:
     def __init__(self, name, mod_damage):
