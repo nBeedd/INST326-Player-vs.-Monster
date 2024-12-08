@@ -1,13 +1,9 @@
 import random
 import re
-playerturn = False
+invalidname = False
 monsterturn = False
-monsterdead = False
-monsterattack = False
 hasweapon = False
 playerchoice = str()
-turn = 0
-
 foundroom = str()
 class Player:
     def __init__(self, name):
@@ -25,8 +21,8 @@ class Player:
     def boost_health(self):
         boost_health = random.choice([5, 10, 15, 20])
         self.health += boost_health
-        print(f"{self.name} found a health boost! Gained {boost_health} health.")
-        self.health = min(max(self.health, 0), 100)
+        print(f"{self.name} found a health boost! Gained {boost_health} HP.")
+        return self.health
     def status(self):
         if self.health > 0:
             return "Alive"
@@ -77,13 +73,24 @@ class Monster:
             return "Dead"
 
 
-
     def __str__(self):
         # returns a string representation of the monster
-        return (f"Monster\n"
-                 f"Health: {self.health}\n"
-                 f"Defense: {self.defense}")
+        return (f"\nMonster Health: {self.health} Defense: {self.defense}")
 
+
+class Weapon:
+    def __init__(self, name, mod_damage):
+        self.name = name
+        self.mod_damage = mod_damage
+
+
+    def __str__(self):
+        return f"{self.name} with damage modifer of {self.mod_damage}"
+
+weapon_storage = [ Weapon("Sword", 1.7),
+                  Weapon("Hammer", 2.5),
+                  Weapon("Dagger", 0.7),
+                  Weapon("Spear", 1.0)]
 def validate_player_name(name):
     """
     """
@@ -100,81 +107,69 @@ while True:
         break
     except ValueError as e:
         print(e)
-        
-# player = Player("Bob")
-
-class Weapon:
-    def __init__(self, name, mod_damage):
-        self.name = name
-        self.mod_damage = mod_damage
-
-    def __str__(self):
-        return f"{self.name} with damage modifer of {self.mod_damage}"
-
 def combat_sys(player, monster, weapon, attack):
-    
+
     """
     Executes a combat action where the player attacks a monster using a attack type.
-    
+
     Parameters:
         player (object): The player initiating the attack.
         monster (object): The monster being attacked.
         weapon (object): The weapon being used for the attack.
         attack (str): The type of attack chosen by the player.
-    
+
     Returns:
         bool: True if the attack was successful, False if the attack type was invalid.
-    
+
     """
+
     attack_types = {"Heavy": 30, "Attack": 20, "Light": 10}
     base_damage = attack_types[attack] if attack in attack_types else None
     if base_damage is None:
         print("Invalid attack choice!")
         return False
-    
+
     total_damage = base_damage * weapon.mod_damage
     monster.take_damage(total_damage)
-    print(f"{player.name} used {attack}! Monster took {total_damage} damage!")
-    return True
-
-weapon_storage = [ Weapon("Sword", 1.7),
-                  Weapon("Hammer", 2.5),
-                  Weapon("Dagger", 0.7),
-                  Weapon("Spear", 1.0)]
-
+    print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
+    return total_damage
 
 
 
 map = {
         "Kitchen": {
             "Floor": 1,
-            "Placement": "Left of Dining Room"
 
         },
         "Dining Room":{
             "Floor": 1,
-            "Placement": "Right of the Kitchen"
         },
         "Living Room":{
             "Floor": 1,
-            "Placement": "Left of Kitchen"
         },
 
         "Bedroom": {
             "Floor": 2,
-            "Placement": "Right of Bathroom"
 
         },
         "Bathroom": {
             "Floor": 2,
-            "Placement": "Left of Bedroom"
         },
         "Guest Room": {
             "Floor": 2,
-            "Placement": "Left of Bathroom"
         }
     }
+
 rooms = [key for key in map]
+
+l3map = map.copy()
+
+del l3map[random.choice(rooms)]
+l3rooms = [key for key in l3map]
+l3rooms.pop(l3rooms.index(random.choice(l3rooms)))
+
+
+
 
 def levels(level):
 
@@ -187,211 +182,186 @@ def levels(level):
 
         if level == 3:
             prev_health = None
-            monster = Monster(3,100,30)
+            if player.health < 50 and player.status() != "Dead":
+                player.boost_health()
+
+            monster = Monster(3,100,3)
             weaponchance = ["yes","no","no","no"]
             gameplay = True
             hasweapon = False
             limit = 8
             while gameplay:
-                room_to_be_taken = random.choice(rooms)
-                print("LEVEL 3")
-                print(str(player))
-                playerchoice = player.choose_room(map)
+                print(f"LEVEL 1\tTurns: {limit}\n")
+                print(str(player) + "\n")
+                print(str(monster)+ "\n")
+                playerchoice = player.choose_room(l3rooms)
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
-                       yourweapon = random.choice(weapon_storage)
-                       hasweapon = True
-                       print(f"{player.name} got {str(yourweapon)}\n")
-                       weaponchance = ["no", "no"]
+                    yourweapon = random.choice(weapon_storage)
+                    hasweapon = True
+                    print(f"{player.name} got {str(yourweapon)}\n")
+                    weaponchance = ["no", "no"]
                 monsterturn = True
                 while monsterturn:
-                      monsterchoices = [place for place in rooms]
-                      foundroom = random.choice(monsterchoices)
-                      print(f"Monster chose {foundroom}")
-                      monsterturn = False
-                      if playerchoice == foundroom:
-                            print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
-                            if hasweapon:
-                                dmg = monster.take_damage(20 * yourweapon.mod_damage)
-                                print(f"MONSTER has been damaged by {player.name}'s {yourweapon.name} and lost {dmg} HP!\n\n")
-                                prev_health = player.health
-                                pdmg = player.take_damage(random.randint(45,70))
-                                print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
-                                limit -= 1
-                                playerturn = True
-                            elif hasweapon == False:
-                                        prev_health = player.health
-                                        pdmg = player.take_damage(random.randint(45,70))
-                                        print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
-                                        limit -= 1
-                                        playerturn = True
-                      elif playerchoice != foundroom:
+                    foundroom = room_finder(playerchoice, map[playerchoice]["Floor"], level)
+                    monsterturn = False
+                    if playerchoice == foundroom:
+                        print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
+                        if hasweapon:
+                            combat_sys(player, monster, yourweapon, "Light")
+                            prev_health = player.health
+                            pdmg = player.take_damage(random.randint(45,70))
+                            print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
                             limit -= 1
-                            playerturn = True
+                        elif hasweapon == False:
+                            prev_health = player.health
+                            pdmg = player.take_damage(random.randint(45,70))
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
+                            limit -= 1
+                    elif playerchoice != foundroom:
+                        limit -= 1
                 if player.status() == "Dead":
-                      print(f"{player.name} is dead and the monster cooks {player.name}'s brains with some scrambled eggs!")
+                      print(f"{player.name} is dead and the monster rips {player.name}'s heart out and makes a sandwich with it!")
                       gameplay = False
                 if monster.status() == "Dead":
                      print(f"Monster is dead and {player.name} wins")
                      gameplay = False
                 if limit == 0:
-                      playerturn = False
                       gameplay = False
-                      print(f"Level {level} is done! Moving to Level {level + 1}")
-                      player.health = 100
-                      levels(level + 1)
+                      print(f"Level {level} is done and the {player.name} survived!")
+
     if level == 2:
-            prev_health = None
-            monster = Monster(2,50,5)
-            weaponchance = ["yes","yes","no","no"]
-            gameplay = True
-            hasweapon = False
-            limit = 3
-            while gameplay:
-                print("LEVEL 2")
-                print(str(player) + "\n")
-                playerchoice = player.choose_room(map)
-                weapon = random.choice(weaponchance)
-                if weapon == "yes":
-                       yourweapon = random.choice(weapon_storage)
-                       hasweapon = True
-                       print(f"{player.name} got {str(yourweapon)}\n")
-                       weapon = ["no", "no"]
-                monsterturn = True
-                while monsterturn :
-                     foundroom = room_finder(playerchoice, map[playerchoice]["Floor"], level)
-                     monsterturn = False
-                     if playerchoice == foundroom:
-                            print(f"MONSTER IS IN THE SAME ROOM AS {player.name}!")
-                            if hasweapon:
-                                dmg = monster.take_damage(random.randint(10,29) * yourweapon.mod_damage)
-                                print(f"MONSTER has been damaged by {player.name}'s {yourweapon.name} and lost {dmg} HP!\n\n")
-                                prev_health = player.health
-                                pdmg = player.take_damage(random.randint(30,55))
-                                print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
-                                limit -= 1
-                                playerturn = True
-                            elif hasweapon == False:
-                                        prev_health = player.health
-                                        pdmg = player.take_damage(random.randint(30,55))
-                                        player.take_damage(random.randint(30,50))
-                                        print(f"MONSTER hits player! and player took {prev_health -  pdmg} HP\n")
-                                        limit -= 1
-                                        playerturn = True
-
-
-                     elif playerchoice != foundroom:
+        prev_health = None
+        monster = Monster(2,50,1.5)
+        weaponchance = ["yes","yes","no","no"]
+        gameplay = True
+        hasweapon = False
+        limit = 7
+        while gameplay:
+            print(f"LEVEL 1\tTurns: {limit}\n")
+            print(str(player) + "\n")
+            print(str(monster))
+            playerchoice = player.choose_room(map)
+            weapon = random.choice(weaponchance)
+            if weapon == "yes":
+                yourweapon = random.choice(weapon_storage)
+                hasweapon = True
+                print(f"{player.name} got {str(yourweapon)}\n")
+                weapon = ["no", "no"]
+            monsterturn = True
+            while monsterturn:
+                foundroom = room_finder(playerchoice, map[playerchoice]["Floor"], level)
+                monsterturn = False
+                if playerchoice == foundroom:
+                    print(f"MONSTER IS IN THE SAME ROOM AS {player.name}!\n")
+                    if hasweapon:
+                        combat_sys(player, monster, yourweapon, "Attack")
+                        prev_health = player.health
+                        pdmg = player.take_damage(random.randint(20,35))
+                        print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP!\n")
                         limit -= 1
-                        playerturn = True
-                if player.status() == "Dead":
-                    print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
+                    elif hasweapon == False:
+                        prev_health = player.health
+                        pdmg = player.take_damage(random.randint(20,35))
+                        print(f"MONSTER hits {player.name} and player lost {prev_health -  pdmg} HP!\n")
+                        limit -= 1
+                elif playerchoice != foundroom:
+                    limit -= 1
+            if player.status() == "Dead":
+                print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
+                gameplay = False
+            elif monster.status() == "Dead":
+                    print(f"The monster is defeated! Onto the next level!\n")
                     gameplay = False
-                elif monster.status() == "Dead":
-                     print(f"The monster is defeated")
-                     gameplay = False
-                if limit == 0:
-                    playerturn = False
-                    gameplay = False
-                    print(f"Level {level} is done! Moving to Level {level + 1}")
-                    player.health = 100
                     levels(level + 1)
+            if limit == 0:
+                gameplay = False
+                print(f"Level {level} is done! Moving to Level {level + 1}\n")
+                player.health = 100
+                levels(level + 1)
     if level == 1:
           prev_health = None
-          monster = Monster(1,40,5.5)
+          monster = Monster(1,50,0.5)
           weaponchance = ["yes","yes","yes","no"]
           gameplay = True
           hasweapon = False
-          limit = 3
+          limit = 5
           while gameplay:
-                print("LEVEL 1")
+                print(f"LEVEL 1\tTurns: {limit}\n")
                 print(str(player) + "\n")
+                print(str(monster))
                 playerchoice = player.choose_room(map)
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
-                       yourweapon = random.choice(weapon_storage)
-                       hasweapon = True
-                       print(f"{player.name} got {str(yourweapon)}\n")
-                       weaponchance = ["no", "no"]
-
+                    yourweapon = random.choice(weapon_storage)
+                    hasweapon = True
+                    print(f"{player.name} got {str(yourweapon)}\n")
+                    weaponchance = ["no", "no"]
                 monsterturn = True
                 while monsterturn:
-                      monsterchoices = [place for place in rooms]
-                      foundroom = random.choice(monsterchoices)
-                      print(f"Monster chose {foundroom}")
-                      monsterturn = False
-                      if playerchoice == foundroom:
-                            print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
-                            if hasweapon:
-                                dmg = monster.take_damage(50 * yourweapon.mod_damage)
-                                print(f"MONSTER has been damaged by {player.name}'s {yourweapon.name} and lost {dmg} HP!\n\n")
-                                prev_health = player.health
-                                pdmg = player.take_damage(5)
-                                print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
-                                limit -= 1
-                                playerturn = True
-                            elif hasweapon == False:
-                                        player.take_damage(5)
-                                        print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
-                                        limit -= 1
-                                        playerturn = True
-                      elif playerchoice != foundroom:
+                    monsterchoices = [place for place in rooms]
+                    foundroom = random.choice(monsterchoices)
+                    print(f"Monster chose {foundroom}\n")
+                    monsterturn = False
+                    if playerchoice == foundroom:
+                        print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
+                        if hasweapon:
+                            combat_sys(player, monster, yourweapon, "Heavy")
+                            prev_health = player.health
+                            pdmg = player.take_damage(5)
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
                             limit -= 1
-                            playerturn = True
+                        elif hasweapon == False:
+                            prev_health = player.health
+                            pdmg = player.take_damage(5)
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
+                            limit -= 1
+                    elif playerchoice != foundroom:
+                        limit -= 1
                 if player.status() == "Dead":
-                      print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
-                      gameplay = False
-
+                    print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
+                    gameplay = False
+                if monster.status() == "Dead":
+                    print(f"Monster is defeated! Onto the next level!\n")
+                    gameplay = False
+                    levels(level + 1)
                 if limit == 0:
-                      playerturn = False
-                      gameplay = False
-                      print(f"Level {level} is done! Moving to Level {level + 1}")
-                      player.health = 100
-                      levels(level + 1)
+                    gameplay = False
+                    print(f"Level {level} is done! Moving to Level {level + 1}\n")
+                    player.health = 100
+                    levels(level + 1)
 
 def room_finder(room, number, level):
     if level == 3:
         if number == 1:
-                monsterchoices = [place for place in rooms if map[place]["Floor"] == 1]
-                if "Left" in map[room]["Placement"]:
-                    narrowchoice = [room for room in monsterchoices if "Right" in map[room]["Placement"]]
-                    narrowchoice.append(room)
-                    finalchoice = random.choice(narrowchoice)
-                    print(f"Monster chose {finalchoice}")
-                    return finalchoice
-                elif "Right" in map[room]["Placement"]:
-                    narrowchoice = [room for room in monsterchoices if "Left" in map[room]["Placement"]]
-                    narrowchoice.append(room)
-                    finalchoice = random.choice(narrowchoice)
-                    print(f"Monster chose {finalchoice}")
-                    return finalchoice
+            monsterchoices = [place for place in l3rooms if map[place]["Floor"] == 1]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+        elif number == 2:
+            monsterchoices = [place for place in l3rooms if map[place]["Floor"] == 2]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+
+    if level == 2:
+        if number == 1:
+            monsterchoices = [place for place in rooms if map[place]["Floor"] == 1]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
         elif number == 2:
             monsterchoices = [place for place in rooms if map[place]["Floor"] == 2]
-            if "Left" in map[room]["Placement"]:
-                narrowchoice = [place for place in monsterchoices if "Right" in map[place]["Placement"]]
-                narrowchoice.append(room)
-                finalchoice = random.choice(narrowchoice)
-                print(f"Monster chose {finalchoice}")
-                return finalchoice
-            elif "Right" in map[room]["Placement"]:
-                narrowchoice = [room for room in monsterchoices if "Left" in map[room]["Placement"]]
-                narrowchoice.append(room)
-                finalchoice = random.choice(narrowchoice)
-                print(f"Monster chose {finalchoice}")
-                return finalchoice
-    elif level == 2:
-            if number == 1:
-                monsterchoices = [place for place in rooms if map[place]["Floor"] == 1]
-                finalchoice = random.choice(monsterchoices)
-                print(f"Monster chose {finalchoice}")
-                return finalchoice
-            if number == 2:
-                monsterchoices = [place for place in rooms if map[place]["Floor"] == 2]
-                finalchoice = random.choice(monsterchoices)
-                print(f"Monster chose {finalchoice}")
-                return finalchoice
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
 
 
 def main():
-      levels(1)
+    levels(1)
 
 main()
