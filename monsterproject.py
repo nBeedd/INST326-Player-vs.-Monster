@@ -93,6 +93,32 @@ class Weapon:
     def __str__(self):
         return f"{self.name} with damage modifer of {self.mod_damage}"
 
+def combat_sys(player, monster, weapon, attack):
+    
+    """
+    Executes a combat action where the player attacks a monster using a attack type.
+    
+    Parameters:
+        player (object): The player initiating the attack.
+        monster (object): The monster being attacked.
+        weapon (object): The weapon being used for the attack.
+        attack (str): The type of attack chosen by the player.
+    
+    Returns:
+        bool: True if the attack was successful, False if the attack type was invalid.
+    
+    """
+    attack_types = {"Heavy": 30, "Attack": 20, "Light": 10}
+    base_damage = attack_types[attack] if attack in attack_types else None
+    if base_damage is None:
+        print("Invalid attack choice!")
+        return False
+    
+    total_damage = base_damage * weapon.mod_damage
+    monster.take_damage(total_damage)
+    print(f"{player.name} used {attack}! Monster took {total_damage} damage!")
+    return True
+
 weapon_storage = [ Weapon("Sword", 1.7),
                   Weapon("Hammer", 2.5),
                   Weapon("Dagger", 0.7),
