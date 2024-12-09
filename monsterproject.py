@@ -107,7 +107,7 @@ while True:
         break
     except ValueError as e:
         print(e)
-def combat_sys(player, monster, weapon, attack):
+def combat_sys(player, monster, weapon):
 
     """
     Executes a combat action where the player attacks a monster using a attack type.
@@ -122,11 +122,13 @@ def combat_sys(player, monster, weapon, attack):
         bool: True if the attack was successful, False if the attack type was invalid.
 
     """
+    
+    attack = input("Choose your attack (Heavy, Medium, Light): ").capitalize()
 
     attack_types = {"Heavy": 30, "Attack": 20, "Light": 10}
     base_damage = attack_types[attack] if attack in attack_types else None
     if base_damage is None:
-        print("Invalid attack choice!")
+        print("Invalid attack choice! Monster takes advantage and attacks!\n")
         return False
 
     total_damage = base_damage * weapon.mod_damage
@@ -206,7 +208,7 @@ def levels(level):
                     if playerchoice == foundroom:
                         print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
                         if hasweapon:
-                            combat_sys(player, monster, yourweapon, "Light")
+                            combat_sys(player, monster, yourweapon)
                             prev_health = player.health
                             pdmg = player.take_damage(random.randint(45,70))
                             if player.health < 50 and player.status() != "Dead":
@@ -257,7 +259,7 @@ def levels(level):
                 if playerchoice == foundroom:
                     print(f"MONSTER IS IN THE SAME ROOM AS {player.name}!\n")
                     if hasweapon:
-                        combat_sys(player, monster, yourweapon, "Attack")
+                        combat_sys(player, monster, yourweapon)
                         prev_health = player.health
                         pdmg = player.take_damage(random.randint(20,35))
                         print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP!\n")
@@ -308,7 +310,7 @@ def levels(level):
                     if playerchoice == foundroom:
                         print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
                         if hasweapon:
-                            combat_sys(player, monster, yourweapon, "Heavy")
+                            combat_sys(player, monster, yourweapon)
                             prev_health = player.health
                             pdmg = player.take_damage(5)
                             print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
