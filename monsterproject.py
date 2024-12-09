@@ -5,6 +5,7 @@ monsterturn = False
 hasweapon = False
 playerchoice = str()
 foundroom = str()
+player = None
 class Player:
     def __init__(self, name):
         self.name = name
@@ -182,16 +183,14 @@ def levels(level):
 
         if level == 3:
             prev_health = None
-            if player.health < 50 and player.status() != "Dead":
-                player.boost_health()
 
             monster = Monster(3,100,3)
             weaponchance = ["yes","no","no","no"]
             gameplay = True
             hasweapon = False
-            limit = 8
+            limit = 7
             while gameplay:
-                print(f"LEVEL 1\tTurns: {limit}\n")
+                print(f"LEVEL 3\tTurns: {limit}\n")
                 print(str(player) + "\n")
                 print(str(monster)+ "\n")
                 playerchoice = player.choose_room(l3rooms)
@@ -211,11 +210,15 @@ def levels(level):
                             combat_sys(player, monster, yourweapon, "Light")
                             prev_health = player.health
                             pdmg = player.take_damage(random.randint(45,70))
+                            if player.health < 50 and player.status() != "Dead":
+                                    player.boost_health()
                             print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
                             limit -= 1
                         elif hasweapon == False:
                             prev_health = player.health
                             pdmg = player.take_damage(random.randint(45,70))
+                            if player.health < 50 and player.status() != "Dead":
+                                    player.boost_health()
                             print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
                             limit -= 1
                     elif playerchoice != foundroom:
@@ -236,9 +239,9 @@ def levels(level):
         weaponchance = ["yes","yes","no","no"]
         gameplay = True
         hasweapon = False
-        limit = 7
+        limit = 4
         while gameplay:
-            print(f"LEVEL 1\tTurns: {limit}\n")
+            print(f"LEVEL 2\tTurns: {limit}\n")
             print(str(player) + "\n")
             print(str(monster))
             playerchoice = player.choose_room(map)
@@ -285,7 +288,7 @@ def levels(level):
           weaponchance = ["yes","yes","yes","no"]
           gameplay = True
           hasweapon = False
-          limit = 5
+          limit = 3
           while gameplay:
                 print(f"LEVEL 1\tTurns: {limit}\n")
                 print(str(player) + "\n")
@@ -360,8 +363,6 @@ def room_finder(room, number, level):
             print(f"Monster chose {finalchoice}\n")
             return finalchoice
 
-
 def main():
     levels(1)
 
-main()
