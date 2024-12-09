@@ -11,7 +11,6 @@ class Player:
         self.name = name
         self.health = 100
         self.weapon = None
-        self.stamina = 100
         self.current_room = None
 
     def take_damage(self, damage):
