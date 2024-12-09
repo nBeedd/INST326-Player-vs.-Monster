@@ -135,32 +135,11 @@ def combat_sys(player, monster, weapon):
     monster.take_damage(total_damage)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
     return total_damage
+    
 
 
-
-map = {
-        "Kitchen": {
-            "Floor": 1,
-
-        },
-        "Dining Room":{
-            "Floor": 1,
-        },
-        "Living Room":{
-            "Floor": 1,
-        },
-
-        "Bedroom": {
-            "Floor": 2,
-
-        },
-        "Bathroom": {
-            "Floor": 2,
-        },
-        "Guest Room": {
-            "Floor": 2,
-        }
-    }
+with open('gamemap.json', r) as file:
+    map = json.load(file)
 
 rooms = [key for key in map]
 
