@@ -81,19 +81,47 @@ class Monster:
 
 class Weapon:
     def __init__(self, name, mod_damage):
+        """
+        Initializes the weapon object.
+        
+        Args:
+            name (str): Name of the weapon.
+            mod_damage (float): The damage modifer of the weapon.
+            
+        Side Effects:
+            Attributes name and mod_damage are created. 
+        """
         self.name = name
         self.mod_damage = mod_damage
 
 
     def __str__(self):
+        """
+        An informal representation of the weapon description.
+        
+        Returns:
+            str: String formatted with name of weapon and the damage modifer.
+        """
         return f"{self.name} with damage modifer of {self.mod_damage}"
 
 weapon_storage = [ Weapon("Sword", 1.7),
                   Weapon("Hammer", 2.5),
                   Weapon("Dagger", 0.7),
                   Weapon("Spear", 1.0)]
+
+
 def validate_player_name(name):
     """
+    Validates the name the player inputs when the game starts
+    
+    Args:
+        name (str): name inputted by the player.
+        
+    Raises:
+        ValueError: if the name doesn't start with a capital letter and has numbers.
+    
+    Returns:
+        str: Validated players name.
     """
     if not re.match(r"^[A-Z][a-zA-Z]*$", name):
         raise ValueError("Player name must start with a capital letter and contain only letters.")
@@ -113,14 +141,15 @@ def combat_sys(player, monster, weapon):
     """
     Executes a combat action where the player attacks a monster using a attack type.
 
-    Parameters:
+    Args:
         player (object): The player initiating the attack.
         monster (object): The monster being attacked.
         weapon (object): The weapon being used for the attack.
         attack (str): The type of attack chosen by the player.
 
     Returns:
-        bool: True if the attack was successful, False if the attack type was invalid.
+        float: Total damage of the attack.
+        bool: False if the attack type was invalid.
 
     """
 
