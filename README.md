@@ -20,3 +20,5 @@ Assuming you have already downloaded the monster_Vs_player.py and gamemap.json o
 | --- | --- | --- |
 | status | Abhishek Subedi | Conditional Expression | 
 | str | Abhishek Subedi | Magic Method | 
+| validate_player_name | Edras Tlapechco | Regular Expression | 
+| combat_sys | Edras Tlapechco | Conditional Expression |
