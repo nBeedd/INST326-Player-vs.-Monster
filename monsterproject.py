@@ -1,6 +1,7 @@
+
 import random
 import re
-invalidname = False
+from json import load
 monsterturn = False
 hasweapon = False
 playerchoice = str()
@@ -122,10 +123,10 @@ def combat_sys(player, monster, weapon):
         bool: True if the attack was successful, False if the attack type was invalid.
 
     """
-    
+
     attack = input("Choose your attack (Heavy, Medium, Light): ").capitalize()
 
-    attack_types = {"Heavy": 30, "Attack": 20, "Light": 10}
+    attack_types = {"Heavy": 30, "Medium": 20, "Light": 10}
     base_damage = attack_types[attack] if attack in attack_types else None
     if base_damage is None:
         print("Invalid attack choice! Monster takes advantage and attacks!\n")
@@ -135,15 +136,18 @@ def combat_sys(player, monster, weapon):
     monster.take_damage(total_damage)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
     return total_damage
-    
+
+jsonfile = "gamemap.json"
 
 
-with open('gamemap.json', r) as file:
-    map = json.load(file)
+def jsonopener(path):
 
-rooms = [key for key in map]
+    with open(path) as file:
+        map = load(file)
+        return map
+rooms = [key for key in jsonopener(jsonfile)]
 
-l3map = map.copy()
+l3map = jsonopener(jsonfile).copy()
 
 del l3map[random.choice(rooms)]
 l3rooms = [key for key in l3map]
@@ -182,7 +186,7 @@ def levels(level):
                     weaponchance = ["no", "no"]
                 monsterturn = True
                 while monsterturn:
-                    foundroom = room_finder(playerchoice, map[playerchoice]["Floor"], level)
+                    foundroom = room_finder(playerchoice, jsonopener(jsonfile)[playerchoice]["Floor"], level)
                     monsterturn = False
                     if playerchoice == foundroom:
                         print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
@@ -224,7 +228,7 @@ def levels(level):
             print(f"LEVEL 2\tTurns: {limit}\n")
             print(str(player) + "\n")
             print(str(monster))
-            playerchoice = player.choose_room(map)
+            playerchoice = player.choose_room(jsonopener(jsonfile))
             weapon = random.choice(weaponchance)
             if weapon == "yes":
                 yourweapon = random.choice(weapon_storage)
@@ -233,7 +237,7 @@ def levels(level):
                 weapon = ["no", "no"]
             monsterturn = True
             while monsterturn:
-                foundroom = room_finder(playerchoice, map[playerchoice]["Floor"], level)
+                foundroom = room_finder(playerchoice, jsonopener(jsonfile)[playerchoice]["Floor"], level)
                 monsterturn = False
                 if playerchoice == foundroom:
                     print(f"MONSTER IS IN THE SAME ROOM AS {player.name}!\n")
@@ -256,6 +260,7 @@ def levels(level):
             elif monster.status() == "Dead":
                     print(f"The monster is defeated! Onto the next level!\n")
                     gameplay = False
+                    player.health = 100
                     levels(level + 1)
             if limit == 0:
                 gameplay = False
@@ -273,7 +278,7 @@ def levels(level):
                 print(f"LEVEL 1\tTurns: {limit}\n")
                 print(str(player) + "\n")
                 print(str(monster))
-                playerchoice = player.choose_room(map)
+                playerchoice = player.choose_room(jsonopener(jsonfile))
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
                     yourweapon = random.choice(weapon_storage)
@@ -317,13 +322,13 @@ def levels(level):
 def room_finder(room, number, level):
     if level == 3:
         if number == 1:
-            monsterchoices = [place for place in l3rooms if map[place]["Floor"] == 1]
+            monsterchoices = [place for place in l3rooms if jsonopener(jsonfile)[place]["Floor"] == 1]
             monsterchoices.append(room)
             finalchoice = random.choice(monsterchoices)
             print(f"Monster chose {finalchoice}\n")
             return finalchoice
         elif number == 2:
-            monsterchoices = [place for place in l3rooms if map[place]["Floor"] == 2]
+            monsterchoices = [place for place in l3rooms if jsonopener(jsonfile)[place]["Floor"] == 2]
             monsterchoices.append(room)
             finalchoice = random.choice(monsterchoices)
             print(f"Monster chose {finalchoice}\n")
@@ -331,13 +336,13 @@ def room_finder(room, number, level):
 
     if level == 2:
         if number == 1:
-            monsterchoices = [place for place in rooms if map[place]["Floor"] == 1]
+            monsterchoices = [place for place in rooms if jsonopener(jsonfile)[place]["Floor"] == 1]
             monsterchoices.append(room)
             finalchoice = random.choice(monsterchoices)
             print(f"Monster chose {finalchoice}\n")
             return finalchoice
         elif number == 2:
-            monsterchoices = [place for place in rooms if map[place]["Floor"] == 2]
+            monsterchoices = [place for place in rooms if jsonopener(jsonfile)[place]["Floor"] == 2]
             monsterchoices.append(room)
             finalchoice = random.choice(monsterchoices)
             print(f"Monster chose {finalchoice}\n")
