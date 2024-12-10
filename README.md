@@ -8,8 +8,9 @@
 ## How to Run Our Program
 Assuming you have already downloaded the monster_Vs_player.py and gamemap.json on your computer, follow these steps:
 1. Open the monster_Vs_player.py file on VS Code.
-2. Open the Terminal.
-3. Run the command **python3 monster_Vs_player.py** if you are a Mac user or **python monster_Vs_player.py** for a Windows user to start the game.
+2. In the main function set the levels function with the level(1 - 3) and turns to your liking.
+3. Open the Terminal.
+4. Run the command **python3 monster_Vs_player.py** if you are a Mac user or **python monster_Vs_player.py** for a Windows user to start the game.
 
 ## How to Use Our Program
 * **Input**: The program will prompt you to enter your player name and choose rooms during gameplay. Follow the prompts and enter choices as instructed.

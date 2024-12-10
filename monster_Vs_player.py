@@ -1,15 +1,6 @@
 import random
 import re
-
-
-invalidname = False
-monsterturn = False
-hasweapon = False
-playerchoice = str()
-foundroom = str()
-player = None
-
-
+from json import load
 class Player:
     """
     A class representing a player in a game.
@@ -345,6 +336,8 @@ def jsonopener(path):
         Opens and reads the file.
     Author:
         Ahmed Babikir
+    Technique:
+        Json.dump()
     """
     with open(path) as file:
         map = load(file)
@@ -356,3 +349,225 @@ l3map = jsonopener(jsonfile).copy()
 del l3map[random.choice(rooms)]
 l3rooms = [key for key in l3map]
 l3rooms.pop(l3rooms.index(random.choice(l3rooms)))
+
+ef levels(level, turns):
+    """
+    Determines the conditions of the game. The higher the level the stronger the monster and less damage tolerance for the player
+
+    Args:
+        level (int): Sets the level of the game. Ranges from 1-3
+        turns (int): Decides how many turns in the level
+
+
+    Side Effects:
+        Prints the monster attacking the player and the HP the player loses
+        Prints the monster being attacked and losing HP
+        Prints the Monster being in the same room as the player
+        Prints the weapons the players finds and the weapons damage based on the Weapon class and methods
+        Prints the matching level and turns
+        Prints the monster or player being dead
+    Technique:
+        F strings with expression
+    Author:
+        Eli Jean
+
+    """
+    if level <= 3:
+        if level == 3:
+            prev_health = None
+
+            monster = Monster(3,100,3)
+            weaponchance = ["yes","no","no","no"]
+            gameplay = True
+            hasweapon = False
+            while gameplay:
+                print(f"LEVEL 3\tTurns: {turns}\n")
+                print(str(player) + "\n")
+                print(str(monster)+ "\n")
+                playerchoice = player.choose_room(l3rooms)
+                weapon = random.choice(weaponchance)
+                if weapon == "yes":
+                    yourweapon = player.equip_weapon(random.choice(weapon_storage))
+                    hasweapon = True
+                    print(f"{player.name} got {str(yourweapon)}\n")
+                    weaponchance = ["no", "no"]
+                monsterturn = True
+                while monsterturn:
+                    foundroom = room_finder(playerchoice, jsonopener(jsonfile)[playerchoice]["Floor"], level)
+                    monsterturn = False
+                    if playerchoice == foundroom:
+                        print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
+                        if hasweapon:
+                            combat_sys(player, monster, yourweapon)
+                            prev_health = player.health
+                            pdmg = player.take_damage(random.randint(45,70))
+                            if player.health < 50 and player.status() != "Dead":
+                                    player.boost_health()
+                            print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
+                            turns -= 1
+                        elif hasweapon == False:
+                            prev_health = player.health
+                            pdmg = player.take_damage(random.randint(45,70))
+                            if player.health < 50 and player.status() != "Dead":
+                                    player.boost_health()
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
+                            turns -= 1
+                    elif playerchoice != foundroom:
+                        turns -= 1
+                if player.status() == "Dead":
+                      print(f"{player.name} is dead and the monster rips {player.name}'s heart out and makes a sandwich with it!")
+                      gameplay = False
+                elif monster.status() == "Dead":
+                     print(f"Monster is dead and {player.name} wins")
+                     gameplay = False
+                if turns == 0:
+                      gameplay = False
+                      print(f"Level {level} is done and the {player.name} survived!")
+
+    if level == 2:
+        prev_health = None
+        monster = Monster(2,50,1.5)
+        weaponchance = ["yes","yes","no","no"]
+        gameplay = True
+        hasweapon = False
+        while gameplay:
+            print(f"LEVEL 2\tTurns: {turns}\n")
+            print(str(player) + "\n")
+            print(str(monster))
+            playerchoice = player.choose_room(jsonopener(jsonfile))
+            weapon = random.choice(weaponchance)
+            if weapon == "yes":
+                yourweapon = player.equip_weapon(random.choice(weapon_storage))
+                hasweapon = True
+                print(f"{player.name} got {str(yourweapon)}\n")
+                weapon = ["no", "no"]
+            monsterturn = True
+            while monsterturn:
+                foundroom = room_finder(playerchoice, jsonopener(jsonfile)[playerchoice]["Floor"], level)
+                monsterturn = False
+                if playerchoice == foundroom:
+                    print(f"MONSTER IS IN THE SAME ROOM AS {player.name}!\n")
+                    if hasweapon:
+                        combat_sys(player, monster, yourweapon)
+                        prev_health = player.health
+                        pdmg = player.take_damage(random.randint(20,35))
+                        print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP!\n")
+                        turns -= 1
+                    elif hasweapon == False:
+                        prev_health = player.health
+                        pdmg = player.take_damage(random.randint(20,35))
+                        print(f"MONSTER hits {player.name} and player lost {prev_health -  pdmg} HP!\n")
+                        turns -= 1
+                elif playerchoice != foundroom:
+                    turns -= 1
+            if player.status() == "Dead":
+                print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
+                gameplay = False
+            elif monster.status() == "Dead":
+                    print(f"The monster is defeated! Onto the next level!\n")
+                    gameplay = False
+                    player.health = 100
+                    levels(level + 1)
+            if turns == 0:
+                gameplay = False
+                print(f"Level {level} is done! Moving to Level {level + 1}\n")
+                player.health = 100
+                levels(level + 1)
+    if level == 1:
+          prev_health = None
+          monster = Monster(1,50,0.5)
+          weaponchance = ["yes","yes","yes","no"]
+          gameplay = True
+          hasweapon = False
+          while gameplay:
+                print(f"LEVEL 1\tTurns: {turns}\n")
+                print(str(player) + "\n")
+                print(str(monster))
+                playerchoice = player.choose_room(jsonopener(jsonfile))
+                weapon = random.choice(weaponchance)
+                if weapon == "yes":
+                    yourweapon = player.equip_weapon(random.choice(weapon_storage))
+                    hasweapon = True
+                    print(f"{player.name} got {str(yourweapon)}\n")
+                    weaponchance = ["no", "no"]
+                monsterturn = True
+                while monsterturn:
+                    monsterchoices = [place for place in rooms]
+                    foundroom = random.choice(monsterchoices)
+                    print(f"Monster chose {foundroom}\n")
+                    monsterturn = False
+                    if playerchoice == foundroom:
+                        print(f"MONSTER IS IN THE SAME ROOM AS {player.name}\n")
+                        if hasweapon:
+                            combat_sys(player, monster, yourweapon)
+                            prev_health = player.health
+                            pdmg = player.take_damage(5)
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
+                            turns -= 1
+                        elif hasweapon == False:
+                            prev_health = player.health
+                            pdmg = player.take_damage(5)
+                            print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
+                            turns -= 1
+                    elif playerchoice != foundroom:
+                        turns -= 1
+                if player.status() == "Dead":
+                    print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
+                    gameplay = False
+                if monster.status() == "Dead":
+                    print(f"Monster is defeated! Onto the next level!\n")
+                    gameplay = False
+                    levels(level + 1)
+                if turns == 0:
+                    gameplay = False
+                    print(f"Level {level} is done! Moving to Level {level + 1}\n")
+                    player.health = 100
+                    levels(level + 1)
+
+def room_finder(room, number, level):
+    """
+    Assists the monster in finding rooms by using the room's floor number
+
+
+    Returns:
+        Returns the room the monster selected
+    Side Effects:
+        Prints what the monster selected
+        Changes the monsterchoices list
+    Technique:
+        Comprehensions
+    Author:
+        Eli Jean
+    """
+    if level == 3:
+        if number == 1:
+            monsterchoices = [place for place in l3rooms if jsonopener(jsonfile)[place]["Floor"] == 1]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+        elif number == 2:
+            monsterchoices = [place for place in l3rooms if jsonopener(jsonfile)[place]["Floor"] == 2]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+
+    if level == 2:
+        if number == 1:
+            monsterchoices = [place for place in rooms if jsonopener(jsonfile)[place]["Floor"] == 1]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+        elif number == 2:
+            monsterchoices = [place for place in rooms if jsonopener(jsonfile)[place]["Floor"] == 2]
+            monsterchoices.append(room)
+            finalchoice = random.choice(monsterchoices)
+            print(f"Monster chose {finalchoice}\n")
+            return finalchoice
+
+def main():
+    levels(1, 5)
+if __name__ == "__main__":
+    main()
