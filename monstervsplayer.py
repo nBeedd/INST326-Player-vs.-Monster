@@ -306,6 +306,7 @@ def combat_sys(player, monster, weapon):
         Prints a prompt for the user to input their attack
         Prints message to terminal
         Modifies Monster object by applying damage
+        Modifies Player object by applying damage because of the recoil of the weapon
 
     Author:
         Edras Tlapechco
@@ -318,14 +319,20 @@ def combat_sys(player, monster, weapon):
     attack = input("Choose your attack (Heavy, Medium, Light): ").capitalize()
 
     attack_types = {"Heavy": 30, "Medium": 20, "Light": 10}
+    recoil_damage = {"Heavy": 5, "Medium": 3, "Light": 1}
     base_damage = attack_types[attack] if attack in attack_types else None
     if base_damage is None:
         print("Invalid attack choice! Monster takes advantage and attacks!\n")
         return False
     total_damage = base_damage * weapon.mod_damage
     monster.take_damage(total_damage)
+    
+    player.take_damage(recoil_damage[attack])
+    #print(f"{player.name} took {recoil_damage[attack]} recoil damage!")
+    
     print(weapon)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
+    print(f"{player.name} took {recoil_damage[attack]} recoil damage!")
     return total_damage
 
 jsonfile = "gamemap.json"
