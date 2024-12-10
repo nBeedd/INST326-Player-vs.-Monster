@@ -58,16 +58,50 @@ class Player:
 
 class Monster:
     def __init__(self, level, health=100, defense=5):
+        
+        """
+        Initializes a new Monster instance with level, health, and defense.
+
+        Args:
+            level (int): The initial level of the monster.
+            health (int): The initial health points of the monster.
+            defense (int): The defense value of the monster.
+
+        Side Effects:
+            Sets the monster's attributes to the given or default values.
+        """
+    
         self.level = level
         self.health = health
         self.defense = defense
 
     def take_damage(self, damage):
-        # Reduces the monster's health based on incoming damage.
+        
+        """
+        Reduces the monster's health based on the incoming damage.
+
+        Args:
+            damage (int): The amount of damage inflicted on the monster.
+
+        Side Effects:
+            Updates the monster's health attribute, reducing it based on the damage.
+        Returns:
+            int: updated health attribute 
+        """
+        
         self.health = self.health - damage
         self.health = self.health + self.defense
         return self.health
+        
     def status(self):
+    
+        """
+        Checks if the monster is still alive.
+
+        Returns:
+            bool: True if the monster's health is greater than 0, False otherwise.
+        """
+        
         if self.health > 0:
             return "Alive"
         else:
@@ -75,7 +109,13 @@ class Monster:
 
 
     def __str__(self):
-        # returns a string representation of the monster
+         """
+        Provides a string representation of the monster's current stats.
+
+        Returns:
+            str: A formatted string showing the monster's health, attack, and defense.
+            
+        """
         return (f"\nMonster Health: {self.health} Defense: {self.defense}")
 
 
