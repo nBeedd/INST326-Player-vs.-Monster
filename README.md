@@ -25,3 +25,6 @@ Assuming you have already downloaded the monster_Vs_player.py and gamemap.json o
 | combat_sys | Edras Tlapechco | Conditional Expression |
 | jsonopener | Ahmed Babikir | Json.dump() |
 | init | Ahmed Babikir | Optional parameters |
+| levels | Eli Jean | f-strings containing expressions |
+| room_finder | Eli Jean | Comprehensions |
+
