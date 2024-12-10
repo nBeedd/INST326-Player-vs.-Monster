@@ -1,6 +1,6 @@
 # Monster Vs. Player Game
 * In our game, players will face a monster as they move through different rooms. There are three levels, each with a stronger monster. Players can find weapons by chance and use them. There are also health jars that appear randomly to help players regenerate their health.
-* **MAKE SURE TO TYPE EVERYTHING EXACTLY AS IT IS PROMPTED TO YOU WHEN ASKED FOR INPUT OR ELSE MONSTER WILL TAKE ADVANTAGE**
+* **MAKE SURE TO TYPE EVERYTHING EXACTLY AS IT IS PROMPTED TO YOU WHEN ASKED FOR INPUT OR ELSE MONSTER WILL TAKE ADVANTAGE.**
 
 ## Purpose of Each File
 * monstervsplayer.py: This file contains the main game logic, including classes for Player, Monster, and Weapon, as well as functions for combat and gameplay levels.
@@ -26,6 +26,6 @@ Assuming you have already downloaded the monstervsplayer.py and gamemap.json on 
 | combat_sys | Edras Tlapechco | Conditional Expression |
 | jsonopener | Ahmed Babikir | Json.dump() |
 | init | Ahmed Babikir | Optional parameters |
-| levels | Eli Jean | f-strings containing expressions |
+| levels | Eli Jean | F-strings Containing Expressions |
 | room_finder | Eli Jean | Comprehensions |
 
