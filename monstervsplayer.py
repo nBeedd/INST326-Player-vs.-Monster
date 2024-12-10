@@ -328,7 +328,6 @@ def combat_sys(player, monster, weapon):
     monster.take_damage(total_damage)
     
     player.take_damage(recoil_damage[attack])
-    #print(f"{player.name} took {recoil_damage[attack]} recoil damage!")
     
     print(weapon)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
