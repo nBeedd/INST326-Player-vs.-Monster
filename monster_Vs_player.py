@@ -345,6 +345,8 @@ def jsonopener(path):
         Opens and reads the file.
     Author:
         Ahmed Babikir
+    Technique:
+        Json.dump()
     """
     with open(path) as file:
         map = load(file)
