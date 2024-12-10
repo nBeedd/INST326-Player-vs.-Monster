@@ -63,12 +63,17 @@ class Player:
         Returns:
             int: The new health value after boosting.
         
-        Author: Abhishek Subedi
+        Author: 
+            Abhishek Subedi
+
+        Technique:
+            Key Function
         """
         boost_health = random.choice([5, 10, 15, 20])
         self.health += boost_health
         print(f"{self.name} found a health boost! Gained {boost_health} HP.")
-        return self.health 
+        self.health = min(max(self.health, 0), 100)
+        return self.health  
     
     def status(self):
         """
@@ -78,10 +83,7 @@ class Player:
             str: "Alive" if the player's health is greater than 0, otherwise "Dead".
 
         Author:
-            Abhishek Subedi
-
-        Technique:
-            Conditional expression
+            Abhishek Subedi     
         """
         if self.health > 0:
             return "Alive"
