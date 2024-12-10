@@ -1,6 +1,6 @@
 import random
 import re
-
+from json import load
 class Player:
     """
     A class representing a player in a game.
