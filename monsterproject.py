@@ -210,7 +210,18 @@ jsonfile = "gamemap.json"
 
 
 def jsonopener(path):
+    """
+    Opens and loads a JSON file into a Python dictionary.
 
+    Args:
+        path (str): The file path to the JSON file.
+
+    Returns:
+        dict: The maps from the JSON file as a Python dictionary.
+
+    Side Effects:
+        Opens and reads the file.
+    """
     with open(path) as file:
         map = load(file)
         return map
