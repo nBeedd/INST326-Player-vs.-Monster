@@ -147,3 +147,118 @@ class Player:
             Magic method
         """
         return f"Player: {self.name}, Health: {self.health}, Current Room: {self.current_room}"
+    
+    
+    
+    
+    
+    #Insert Monster Here
+    
+    
+    
+    
+    
+class Weapon:
+    def __init__(self, name, mod_damage):
+        """
+        Initializes the weapon object.
+        
+        Args:
+            name (str): Name of the weapon.
+            mod_damage (float): The damage modifer of the weapon.
+            
+        Side Effects:
+            Attributes name and mod_damage are created. 
+        """
+        self.name = name
+        self.mod_damage = mod_damage
+
+
+    def __str__(self):
+        """
+        An informal representation of the weapon description.
+        
+        Returns:
+            str: String formatted with name of weapon and the damage modifer.
+        """
+        return f"{self.name} with damage modifer of {self.mod_damage}"
+
+weapon_storage = [ Weapon("Sword", 1.7),
+                  Weapon("Hammer", 2.5),
+                  Weapon("Dagger", 0.7),
+                  Weapon("Spear", 1.0)]
+
+
+def validate_player_name(name):
+    """
+    Validates the name the player inputs when the game starts
+    
+    Args:
+        name (str): name inputted by the player.
+        
+    Raises:
+        ValueError: if the name doesn't start with a capital letter and has numbers.
+    
+    Returns:
+        str: Validated players name.
+        
+    Author:
+        Edras Tlapechco
+        
+    Technique Demonstrated:
+        Regular expressions
+    """
+    if not re.match(r"^[A-Z][a-zA-Z]*$", name):
+        raise ValueError("Player name must start with a capital letter and contain only letters.")
+    return name
+
+
+
+while True:
+    try:
+        player_name  = input("Enter your player name: ")
+        validated_name = validate_player_name(player_name)
+        player = Player(validated_name)
+        print(f"Welcome, {player.name}!")
+        break
+    except ValueError as e:
+        print(e)
+        
+        
+        
+        
+def combat_sys(player, monster, weapon):
+
+    """
+    Executes a combat action where the player attacks a monster using a attack type.
+
+    Args:
+        player (object): The player initiating the attack.
+        monster (object): The monster being attacked.
+        weapon (object): The weapon being used for the attack.
+        attack (str): The type of attack chosen by the player.
+
+    Returns:
+        float: Total damage of the attack.
+        bool: False if the attack type was invalid.
+        
+    Author:
+        Edras Tlapechco
+        
+    Technique Demonstrated:
+        Conditional Expression
+
+    """
+
+    attack = input("Choose your attack (Heavy, Medium, Light): ").capitalize()
+
+    attack_types = {"Heavy": 30, "Medium": 20, "Light": 10}
+    base_damage = attack_types[attack] if attack in attack_types else None
+    if base_damage is None:
+        print("Invalid attack choice! Monster takes advantage and attacks!\n")
+        return False
+
+    total_damage = base_damage * weapon.mod_damage
+    monster.take_damage(total_damage)
+    print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
+    return total_damage
