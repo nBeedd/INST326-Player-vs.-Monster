@@ -1,5 +1,6 @@
 # Monster Vs. Player Game
 * In our game, players will face a monster as they move through different rooms. There are three levels, each with a stronger monster. Players can find weapons by chance and use them. There are also health jars that appear randomly to help players regenerate their health.
+* **MAKE SURE TO TYPE EVERYTHING EXACTLY AS IT IS PROMPTED TO YOU WHEN ASKED FOR INPUT**
 
 ## Purpose of Each File
 * monstervsplayer.py: This file contains the main game logic, including classes for Player, Monster, and Weapon, as well as functions for combat and gameplay levels.
