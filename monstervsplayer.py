@@ -301,6 +301,11 @@ def combat_sys(player, monster, weapon):
     Returns:
         float: Total damage of the attack.
         bool: False if the attack type was invalid.
+        
+    Side Effects:
+        Prints a prompt for the user to input their attack
+        Prints message to terminal
+        Modifies Monster object by applying damage
 
     Author:
         Edras Tlapechco
@@ -322,6 +327,7 @@ def combat_sys(player, monster, weapon):
     print(weapon)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
     return total_damage
+
 jsonfile = "gamemap.json"
 def jsonopener(path):
     """
