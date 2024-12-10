@@ -1,6 +1,8 @@
+
 import random
 import re
 from json import load
+
 class Player:
     """
     A class representing a player in a game.
@@ -216,8 +218,6 @@ class Monster:
     
     
     
-    
-    
 class Weapon:
     def __init__(self, name, mod_damage):
         """
@@ -284,8 +284,7 @@ while True:
     except ValueError as e:
         print(e)
         
-        
-        
+            
         
 def combat_sys(player, monster, weapon):
 
@@ -322,6 +321,9 @@ def combat_sys(player, monster, weapon):
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
     return total_damage
     
+jsonfile = "gamemap.json"
+
+
 def jsonopener(path):
     """
     Opens and loads a JSON file into a Python dictionary.
