@@ -19,6 +19,6 @@ Assuming you have already downloaded the monster_Vs_player.py and gamemap.json o
  | Method/Function | Primary Author | Techniques Demonstrated
 | --- | --- | --- |
 | boost_health | Abhishek Subedi | Key Function | 
-| __str__ | Abhishek Subedi | Magic Method | 
+| str | Abhishek Subedi | Magic Method | 
 | validate_player_name | Edras Tlapechco | Regular Expression | 
 | combat_sys | Edras Tlapechco | Conditional Expression |
