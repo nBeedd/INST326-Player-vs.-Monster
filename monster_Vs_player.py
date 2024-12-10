@@ -350,7 +350,7 @@ del l3map[random.choice(rooms)]
 l3rooms = [key for key in l3map]
 l3rooms.pop(l3rooms.index(random.choice(l3rooms)))
 
-ef levels(level, turns):
+def levels(level, turns):
     """
     Determines the conditions of the game. The higher the level the stronger the monster and less damage tolerance for the player
 
