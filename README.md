@@ -23,4 +23,4 @@ Assuming you have already downloaded the monster_Vs_player.py and gamemap.json o
 | validate_player_name | Edras Tlapechco | Regular Expression | 
 | combat_sys | Edras Tlapechco | Conditional Expression |
 | jsonopener | Ahmed Babikir | Json.dump() |
-| __init__ | Ahmed Babikir | Optional parameters |
+| init | Ahmed Babikir | Optional parameters |
