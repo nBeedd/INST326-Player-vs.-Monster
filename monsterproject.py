@@ -1,47 +1,119 @@
-
 import random
 import re
 from json import load
-monsterturn = False
-hasweapon = False
-playerchoice = str()
-foundroom = str()
-player = None
+
 class Player:
+    """
+    A class representing a player in a game.
+
+    Attributes:
+        name (str): The name of the player.
+        health (int): The current health points of the player, set to 100.
+        weapon (str or None): The weapon currently equipped by the player.
+        current_room (str or None): The current room the player is in.     
+    """
+
     def __init__(self, name):
+        """
+        Initialize a Player object.
+
+        Args:
+            name (str): The name of the player.
+
+        Side-effects:
+             Initializes instance attributes (self.health, self.weapon, self.current_room).
+
+        Author: 
+            Abhishek Subedi
+        """
         self.name = name
         self.health = 100
         self.weapon = None
         self.current_room = None
 
     def take_damage(self, damage):
+        """
+        Reduce the player's health by the specified amount.
+
+        Args:
+            damage (int): The amount of damage to be taken.
+
+        Returns:
+            int: The remaining health after taking the damage.
+
+        Author:
+            Abhishek Subedi
+        """
         self.health -= damage
         return self.health
 
 
     def boost_health(self):
+        """
+        Increase the player's health by a random amount between 5 to 20.
+
+        Returns:
+            int: The new health value after boosting.
+        
+        Author: 
+            Abhishek Subedi
+
+        Technique:
+            Key Function
+        """
         boost_health = random.choice([5, 10, 15, 20])
         self.health += boost_health
         print(f"{self.name} found a health boost! Gained {boost_health} HP.")
-        return self.health
+        self.health = min(max(self.health, 0), 100)
+        return self.health  
+    
     def status(self):
+        """
+        Check the current status of the player.
+
+        Returns:
+            str: "Alive" if the player's health is greater than 0, otherwise "Dead".
+
+        Author:
+            Abhishek Subedi     
+        """
         if self.health > 0:
             return "Alive"
         else:
             return "Dead"
 
     def equip_weapon(self, weapon):
-         self.weapon = weapon
+        """
+        Equip the player with a specified weapon.
 
+        Args:
+            weapon (str): The weapon to be equipped.
+
+        Author:
+            Abhishek Subedi
+        """
+         
+        self.weapon = weapon
 
     def choose_room(self, game_map):
+        """
+        Allow the player to choose a room from a provided game map.
+
+        Args:
+            game_map (list): A list of available rooms.
+
+        Returns:
+            str: The name of the chosen room.
+
+        Author:
+            Abhishek Subedi
+        """
         print("Available Rooms:")
         for room in game_map:
               print(room)
         playerturn = True
         while playerturn:
             room_choice = input("Select a room and type the room exactly as shown: ")
-
 
             if room_choice in game_map:
                 self.current_room = room_choice
@@ -54,11 +126,25 @@ class Player:
                 print("Invalid room choice. Please select a valid room.")
 
     def __str__(self):
-          return f"Player: {self.name}, Health: {self.health}, Current Room: {self.current_room}"
+        """
+        Return a string representation of the player.
 
+        Returns:
+            str: A f string showing the player's name, health, and current room.
+
+        Author: 
+            Abhishek Subedi
+
+        Technique:
+            Magic method
+        """
+        return f"Player: {self.name}, Health: {self.health}, Current Room: {self.current_room}"
+    
+    
+    
 class Monster:
+    
     def __init__(self, level, health=100, defense=5):
-        
         """
         Initializes a new Monster instance with level, health, and defense.
 
@@ -69,6 +155,10 @@ class Monster:
 
         Side Effects:
             Sets the monster's attributes to the given or default values.
+        Author: 
+            Ahmed Babikir
+        Technique:
+            magic method
         """
     
         self.level = level
@@ -76,7 +166,6 @@ class Monster:
         self.defense = defense
 
     def take_damage(self, damage):
-        
         """
         Reduces the monster's health based on the incoming damage.
 
@@ -87,6 +176,8 @@ class Monster:
             Updates the monster's health attribute, reducing it based on the damage.
         Returns:
             int: updated health attribute 
+        Author: 
+            Ahmed Babikir
         """
         
         self.health = self.health - damage
@@ -100,6 +191,8 @@ class Monster:
 
         Returns:
             bool: True if the monster's health is greater than 0, False otherwise.
+        Author: 
+            Ahmed Babikir
         """
         
         if self.health > 0:
@@ -109,16 +202,21 @@ class Monster:
 
 
     def __str__(self):
-         """
+        """
         Provides a string representation of the monster's current stats.
 
         Returns:
             str: A formatted string showing the monster's health, attack, and defense.
+        Author: 
+            Ahmed Babikir
+        Technique:
+            Magic Method
             
         """
         return (f"\nMonster Health: {self.health} Defense: {self.defense}")
-
-
+    
+    
+    
 class Weapon:
     def __init__(self, name, mod_damage):
         """
@@ -162,10 +260,18 @@ def validate_player_name(name):
     
     Returns:
         str: Validated players name.
+        
+    Author:
+        Edras Tlapechco
+        
+    Technique Demonstrated:
+        Regular expressions
     """
     if not re.match(r"^[A-Z][a-zA-Z]*$", name):
         raise ValueError("Player name must start with a capital letter and contain only letters.")
     return name
+
+
 
 while True:
     try:
@@ -176,6 +282,9 @@ while True:
         break
     except ValueError as e:
         print(e)
+        
+            
+        
 def combat_sys(player, monster, weapon):
 
     """
@@ -190,6 +299,12 @@ def combat_sys(player, monster, weapon):
     Returns:
         float: Total damage of the attack.
         bool: False if the attack type was invalid.
+        
+    Author:
+        Edras Tlapechco
+        
+    Technique Demonstrated:
+        Conditional Expression
 
     """
 
@@ -200,12 +315,11 @@ def combat_sys(player, monster, weapon):
     if base_damage is None:
         print("Invalid attack choice! Monster takes advantage and attacks!\n")
         return False
-
     total_damage = base_damage * weapon.mod_damage
     monster.take_damage(total_damage)
     print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
     return total_damage
-
+    
 jsonfile = "gamemap.json"
 
 
@@ -221,6 +335,10 @@ def jsonopener(path):
 
     Side Effects:
         Opens and reads the file.
+    Author:
+        Ahmed Babikir
+    Technique:
+        Json.dump()
     """
     with open(path) as file:
         map = load(file)
@@ -233,18 +351,29 @@ del l3map[random.choice(rooms)]
 l3rooms = [key for key in l3map]
 l3rooms.pop(l3rooms.index(random.choice(l3rooms)))
 
-
-
-
-def levels(level):
-
+def levels(level, turns):
     """
-    Creates a condition for the game according to the game's level. The higher the level the more options the monster has.
+    Determines the conditions of the game. The higher the level the stronger the monster and less damage tolerance for the player
+
     Args:
-        level (int): An integer used to set the level
+        level (int): Sets the level of the game. Ranges from 1-3
+        turns (int): Decides how many turns in the level
+
+
+    Side Effects:
+        Prints the monster attacking the player and the HP the player loses
+        Prints the monster being attacked and losing HP
+        Prints the Monster being in the same room as the player
+        Prints the weapons the players finds and the weapons damage based on the Weapon class and methods
+        Prints the matching level and turns
+        Prints the monster or player being dead
+    Technique:
+        F strings with expression
+    Author:
+        Eli Jean
+
     """
     if level <= 3:
-
         if level == 3:
             prev_health = None
 
@@ -252,15 +381,14 @@ def levels(level):
             weaponchance = ["yes","no","no","no"]
             gameplay = True
             hasweapon = False
-            limit = 7
             while gameplay:
-                print(f"LEVEL 3\tTurns: {limit}\n")
+                print(f"LEVEL 3\tTurns: {turns}\n")
                 print(str(player) + "\n")
                 print(str(monster)+ "\n")
                 playerchoice = player.choose_room(l3rooms)
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
-                    yourweapon = random.choice(weapon_storage)
+                    yourweapon = player.equip_weapon(random.choice(weapon_storage))
                     hasweapon = True
                     print(f"{player.name} got {str(yourweapon)}\n")
                     weaponchance = ["no", "no"]
@@ -277,23 +405,23 @@ def levels(level):
                             if player.health < 50 and player.status() != "Dead":
                                     player.boost_health()
                             print(f"MONSTER hits {player.name} and {player.name} took {prev_health - pdmg} HP\n")
-                            limit -= 1
+                            turns -= 1
                         elif hasweapon == False:
                             prev_health = player.health
                             pdmg = player.take_damage(random.randint(45,70))
                             if player.health < 50 and player.status() != "Dead":
                                     player.boost_health()
                             print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
-                            limit -= 1
+                            turns -= 1
                     elif playerchoice != foundroom:
-                        limit -= 1
+                        turns -= 1
                 if player.status() == "Dead":
                       print(f"{player.name} is dead and the monster rips {player.name}'s heart out and makes a sandwich with it!")
                       gameplay = False
-                if monster.status() == "Dead":
+                elif monster.status() == "Dead":
                      print(f"Monster is dead and {player.name} wins")
                      gameplay = False
-                if limit == 0:
+                if turns == 0:
                       gameplay = False
                       print(f"Level {level} is done and the {player.name} survived!")
 
@@ -303,15 +431,14 @@ def levels(level):
         weaponchance = ["yes","yes","no","no"]
         gameplay = True
         hasweapon = False
-        limit = 4
         while gameplay:
-            print(f"LEVEL 2\tTurns: {limit}\n")
+            print(f"LEVEL 2\tTurns: {turns}\n")
             print(str(player) + "\n")
             print(str(monster))
             playerchoice = player.choose_room(jsonopener(jsonfile))
             weapon = random.choice(weaponchance)
             if weapon == "yes":
-                yourweapon = random.choice(weapon_storage)
+                yourweapon = player.equip_weapon(random.choice(weapon_storage))
                 hasweapon = True
                 print(f"{player.name} got {str(yourweapon)}\n")
                 weapon = ["no", "no"]
@@ -326,14 +453,14 @@ def levels(level):
                         prev_health = player.health
                         pdmg = player.take_damage(random.randint(20,35))
                         print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP!\n")
-                        limit -= 1
+                        turns -= 1
                     elif hasweapon == False:
                         prev_health = player.health
                         pdmg = player.take_damage(random.randint(20,35))
                         print(f"MONSTER hits {player.name} and player lost {prev_health -  pdmg} HP!\n")
-                        limit -= 1
+                        turns -= 1
                 elif playerchoice != foundroom:
-                    limit -= 1
+                    turns -= 1
             if player.status() == "Dead":
                 print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
                 gameplay = False
@@ -342,7 +469,7 @@ def levels(level):
                     gameplay = False
                     player.health = 100
                     levels(level + 1)
-            if limit == 0:
+            if turns == 0:
                 gameplay = False
                 print(f"Level {level} is done! Moving to Level {level + 1}\n")
                 player.health = 100
@@ -353,15 +480,14 @@ def levels(level):
           weaponchance = ["yes","yes","yes","no"]
           gameplay = True
           hasweapon = False
-          limit = 3
           while gameplay:
-                print(f"LEVEL 1\tTurns: {limit}\n")
+                print(f"LEVEL 1\tTurns: {turns}\n")
                 print(str(player) + "\n")
                 print(str(monster))
                 playerchoice = player.choose_room(jsonopener(jsonfile))
                 weapon = random.choice(weaponchance)
                 if weapon == "yes":
-                    yourweapon = random.choice(weapon_storage)
+                    yourweapon = player.equip_weapon(random.choice(weapon_storage))
                     hasweapon = True
                     print(f"{player.name} got {str(yourweapon)}\n")
                     weaponchance = ["no", "no"]
@@ -378,14 +504,14 @@ def levels(level):
                             prev_health = player.health
                             pdmg = player.take_damage(5)
                             print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
-                            limit -= 1
+                            turns -= 1
                         elif hasweapon == False:
                             prev_health = player.health
                             pdmg = player.take_damage(5)
                             print(f"MONSTER hits {player.name} and {player.name} lost {prev_health - pdmg} HP\n")
-                            limit -= 1
+                            turns -= 1
                     elif playerchoice != foundroom:
-                        limit -= 1
+                        turns -= 1
                 if player.status() == "Dead":
                     print(f"{player.name} is dead and the monster eats {player.name}'s flesh!")
                     gameplay = False
@@ -393,13 +519,27 @@ def levels(level):
                     print(f"Monster is defeated! Onto the next level!\n")
                     gameplay = False
                     levels(level + 1)
-                if limit == 0:
+                if turns == 0:
                     gameplay = False
                     print(f"Level {level} is done! Moving to Level {level + 1}\n")
                     player.health = 100
                     levels(level + 1)
 
 def room_finder(room, number, level):
+    """
+    Assists the monster in finding rooms by using the room's floor number
+
+
+    Returns:
+        Returns the room the monster selected
+    Side Effects:
+        Prints what the monster selected
+        Changes the monsterchoices list
+    Technique:
+        Comprehensions
+    Author:
+        Eli Jean
+    """
     if level == 3:
         if number == 1:
             monsterchoices = [place for place in l3rooms if jsonopener(jsonfile)[place]["Floor"] == 1]
@@ -429,5 +569,6 @@ def room_finder(room, number, level):
             return finalchoice
 
 def main():
-    levels(1)
-main()
+    levels(1, 5)
+if __name__ == "__main__":
+    main()
