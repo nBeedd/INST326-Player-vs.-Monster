@@ -165,6 +165,8 @@ class Monster:
             Sets the monster's attributes to the given or default values.
         Author: 
             Ahmed Babikir
+        Technique:
+            magic method
         """
     
         self.level = level
@@ -215,6 +217,8 @@ class Monster:
             str: A formatted string showing the monster's health, attack, and defense.
         Author: 
             Ahmed Babikir
+        Technique:
+            Magic Method
             
         """
         return (f"\nMonster Health: {self.health} Defense: {self.defense}")
@@ -322,6 +326,11 @@ def combat_sys(player, monster, weapon):
     if base_damage is None:
         print("Invalid attack choice! Monster takes advantage and attacks!\n")
         return False
+    total_damage = base_damage * weapon.mod_damage
+    monster.take_damage(total_damage)
+    print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
+    return total_damage
+    
 def jsonopener(path):
     """
     Opens and loads a JSON file into a Python dictionary.
@@ -347,7 +356,3 @@ l3map = jsonopener(jsonfile).copy()
 del l3map[random.choice(rooms)]
 l3rooms = [key for key in l3map]
 l3rooms.pop(l3rooms.index(random.choice(l3rooms)))
-    total_damage = base_damage * weapon.mod_damage
-    monster.take_damage(total_damage)
-    print(f"{player.name} used his {weapon.name}! Monster took {total_damage} damage!")
-    return total_damage
