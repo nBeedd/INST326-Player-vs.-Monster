@@ -210,7 +210,7 @@ class Monster:
 
 
     def __str__(self):
-         """
+        """
         Provides a string representation of the monster's current stats.
 
         Returns:
